@@ -663,6 +663,15 @@ function VideoTile({ src, poster, style }) {
 
 export default function EwaApp() {
   const [view, setView] = useState("home");
+
+  // Private entry point: bookmark a link like yoursite.com/?owner=ledger — it's not
+  // listed anywhere in the visible menu, so clients never encounter it while browsing.
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("owner") === "ledger") setView("ledger");
+    }
+  }, []);
   const [inquiries, setInquiries] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [ledgerUnlocked, setLedgerUnlocked] = useState(false);
@@ -1091,7 +1100,6 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
             { id: "about", label: "About Ẹwà" },
             { id: "testimonials", label: "Testimonials" },
             { id: "inquire", label: "Inquire" },
-            { id: "ledger", label: `Ledger${upcoming.length > 0 ? ` (${upcoming.length})` : ""}` },
           ].map((item) => (
             <button
               key={item.id}
