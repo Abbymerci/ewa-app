@@ -23,16 +23,16 @@ const POSTER2_SRC = "/videos/video-2-poster.jpg";
 const POSTER3_SRC = "/videos/video-3-poster.jpg";
 const POSTER4_SRC = "/videos/video-4-poster.jpg";
 
-const INK = "#1C1410";
-const INK_SOFT = "#2A211B";
-const PAPER = "#FBF6EF";
+const INK = "#3A2B26";
+const INK_SOFT = "#5C463E";
+const PAPER = "#FCF2ED";
 const WHITE = "#FFFFFF";
-const GOLD = "#C9A24E";
-const GOLD_DEEP = "#9C7A2E";
-const BLUSH = "#C97A82";
-const SAGE = "#7C8768";
-const LINE = "#E7DCC9";
-const CREAM_TEXT = "#F3E8D6";
+const GOLD = "#C98D93";
+const GOLD_DEEP = "#A85F6B";
+const BLUSH = "#E8B4B0";
+const SAGE = "#8E9B7C";
+const LINE = "#F0DCD3";
+const CREAM_TEXT = "#3A2B26";
 
 const SERVICES = [
   { id: "decor", label: "Luxury décor & styling" },
@@ -627,7 +627,7 @@ function BalloonVisualizer({ shape, palette, count, venue, decorStyle, showPeopl
         style={{
           width: "100%", height: 440, borderRadius: 4, overflow: "hidden", cursor: "grab",
           background: `radial-gradient(ellipse at 50% 40%, #3A2C1E 0%, ${INK} 65%)`,
-          border: `1px solid rgba(201,162,78,0.3)`, position: "relative",
+          border: `1px solid rgba(201,141,147,0.35)`, position: "relative",
         }}
       />
       <div className="mono" style={{ fontSize: 10.5, letterSpacing: "0.08em", color: "#8A746B", marginTop: 10, textAlign: "center" }}>
@@ -1022,7 +1022,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
         .gallery-img { transition: transform 0.5s ease, filter 0.4s ease; filter: saturate(0.94); }
         .gallery-frame:hover .gallery-img { transform: scale(1.06); filter: saturate(1.05); }
         .cta-btn { transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease; }
-        .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -8px rgba(201,162,78,0.55); }
+        .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px -8px rgba(201,141,147,0.5); }
         .ghost-btn { transition: border-color 0.15s ease, color 0.15s ease; }
         .ghost-btn:hover { border-color: ${GOLD}; color: ${GOLD_DEEP}; }
         .shape-btn, .swatch-btn { transition: border-color 0.15s ease, transform 0.15s ease; }
@@ -1043,7 +1043,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
 
 
       {/* NAV */}
-      <div style={{ position: "sticky", top: 0, zIndex: 30, background: "rgba(28,20,16,0.94)", backdropFilter: "blur(6px)", borderBottom: `1px solid rgba(201,162,78,0.25)` }}>
+      <div style={{ position: "sticky", top: 0, zIndex: 30, background: "rgba(255,255,255,0.92)", backdropFilter: "blur(6px)", borderBottom: `1px solid ${LINE}` }}>
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "12px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <button
@@ -1079,11 +1079,11 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
       )}
       <div style={{
         position: "fixed", top: 0, left: 0, bottom: 0, zIndex: 50, width: 280, maxWidth: "82vw",
-        background: INK, borderRight: `1px solid rgba(201,162,78,0.3)`,
+        background: WHITE, borderRight: `1px solid ${LINE}`, boxShadow: "8px 0 30px -12px rgba(58,43,38,0.12)",
         transform: menuOpen ? "translateX(0)" : "translateX(-102%)",
         transition: "transform 0.28s ease", display: "flex", flexDirection: "column",
       }}>
-        <div style={{ padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: `1px solid rgba(201,162,78,0.2)` }}>
+        <div style={{ padding: "18px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: `1px solid ${LINE}` }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <img src={LOGO_SRC} alt="" style={{ width: 30, height: 30, objectFit: "contain" }} />
             <span className="display" style={{ color: CREAM_TEXT, fontSize: 18 }}>Ẹwà</span>
@@ -1105,9 +1105,9 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
               key={item.id}
               onClick={() => go(item.id)}
               style={{
-                textAlign: "left", background: view === item.id ? "rgba(201,162,78,0.14)" : "transparent",
+                textAlign: "left", background: view === item.id ? "rgba(201,141,147,0.12)" : "transparent",
                 border: "none", borderLeft: view === item.id ? `3px solid ${GOLD}` : "3px solid transparent",
-                color: view === item.id ? GOLD : CREAM_TEXT,
+                color: view === item.id ? GOLD_DEEP : CREAM_TEXT,
                 padding: "13px 18px", fontSize: 14.5, fontWeight: 600, letterSpacing: "0.02em", borderRadius: "0 8px 8px 0",
               }}
             >
@@ -1115,10 +1115,10 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
             </button>
           ))}
         </nav>
-        <div style={{ marginTop: "auto", padding: "18px 20px", borderTop: `1px solid rgba(201,162,78,0.2)` }}>
-          <div className="script" style={{ color: GOLD, fontSize: 17, marginBottom: 6 }}>Where intentionality meets elegance</div>
-          <a href={`tel:${CONTACT.phone.replace(/-/g, "")}`} className="mono" style={{ display: "block", color: "rgba(243,232,214,0.8)", fontSize: 12, textDecoration: "none", marginBottom: 4 }}>{CONTACT.phone}</a>
-          <a href={`mailto:${CONTACT.email}`} className="mono" style={{ display: "block", color: "rgba(243,232,214,0.8)", fontSize: 12, textDecoration: "none" }}>{CONTACT.email}</a>
+        <div style={{ marginTop: "auto", padding: "18px 20px", borderTop: `1px solid ${LINE}` }}>
+          <div className="script" style={{ color: GOLD_DEEP, fontSize: 17, marginBottom: 6 }}>Where intentionality meets elegance</div>
+          <a href={`tel:${CONTACT.phone.replace(/-/g, "")}`} className="mono" style={{ display: "block", color: "#8A746B", fontSize: 12, textDecoration: "none", marginBottom: 4 }}>{CONTACT.phone}</a>
+          <a href={`mailto:${CONTACT.email}`} className="mono" style={{ display: "block", color: "#8A746B", fontSize: 12, textDecoration: "none" }}>{CONTACT.email}</a>
         </div>
       </div>
 
@@ -1126,31 +1126,31 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
         <>
           {/* HERO */}
           <div style={{
-            background: `radial-gradient(ellipse at 50% -10%, #3A2C1E 0%, ${INK} 55%), ${INK}`,
+            background: `radial-gradient(ellipse at 50% -10%, #FBE4DD 0%, ${PAPER} 60%), ${PAPER}`,
             padding: "64px 24px 52px", textAlign: "center", position: "relative", overflow: "hidden",
           }}>
-            <div style={{ position: "absolute", inset: 0, backgroundImage: `radial-gradient(rgba(201,162,78,0.35) 1px, transparent 1px)`, backgroundSize: "26px 26px", opacity: 0.12, pointerEvents: "none" }} />
+            <div style={{ position: "absolute", inset: 0, backgroundImage: `radial-gradient(rgba(201,141,147,0.28) 1px, transparent 1px)`, backgroundSize: "26px 26px", opacity: 0.35, pointerEvents: "none" }} />
             <div style={{ position: "relative", maxWidth: 640, margin: "0 auto" }}>
               <img src={LOGO_SRC} alt="Ẹwà — Events with Abby" style={{ width: 92, height: 92, objectFit: "contain", margin: "0 auto 16px" }} />
-              <div className="mono" style={{ color: GOLD, fontSize: 11, letterSpacing: "0.3em", marginBottom: 14 }}>CHARLOTTE, NORTH CAROLINA</div>
+              <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.3em", marginBottom: 14 }}>CHARLOTTE, NORTH CAROLINA</div>
               <h1 className="display hero-title" style={{ color: CREAM_TEXT, fontSize: 68, fontWeight: 500, margin: 0, lineHeight: 1.02 }}>Ẹwà</h1>
-              <div className="script" style={{ color: GOLD, fontSize: 30, marginTop: 2 }}>Events with Abby</div>
+              <div className="script" style={{ color: GOLD_DEEP, fontSize: 30, marginTop: 2 }}>Events with Abby</div>
               <Ornament />
               <p className="display" style={{ color: CREAM_TEXT, fontSize: 21, fontStyle: "italic", margin: "0 0 8px" }}>
                 Turning moments into timeless memories.
               </p>
-              <p className="mono" style={{ color: "rgba(243,232,214,0.7)", fontSize: 11, letterSpacing: "0.24em", margin: "0 0 26px" }}>
+              <p className="mono" style={{ color: "#8A746B", fontSize: 11, letterSpacing: "0.24em", margin: "0 0 26px" }}>
                 LUXURY · INTENTIONALITY · BEAUTY
               </p>
               <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
                 <button className="cta-btn" onClick={() => go("concierge")} style={{
-                  background: "transparent", color: GOLD, border: `1.5px solid ${GOLD}`, borderRadius: 30, padding: "14px 22px",
+                  background: "transparent", color: GOLD_DEEP, border: `1.5px solid ${GOLD}`, borderRadius: 30, padding: "14px 22px",
                   fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
                 }}>
                   ✦ Ask the concierge
                 </button>
                 <button className="cta-btn" onClick={() => go("inquire")} style={{
-                  background: GOLD, color: INK, border: "none", borderRadius: 30, padding: "14px 26px",
+                  background: GOLD, color: WHITE, border: "none", borderRadius: 30, padding: "14px 26px",
                   fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
                 }}>
                   Begin your inquiry
@@ -1160,21 +1160,21 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
           </div>
 
           {/* FEATURED WORK STRIP */}
-          <div style={{ background: INK, padding: "0 24px 40px" }}>
+          <div style={{ background: PAPER, padding: "0 24px 40px" }}>
             <div className="gallery-grid" style={{ maxWidth: 1000, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14 }}>
               {GALLERY.filter((g) => g.type === "image").slice(0, 3).map((g) => (
-                <button key={g.caption} onClick={() => go("portfolio")} className="gallery-frame" style={{ border: `1px solid rgba(201,162,78,0.3)`, borderRadius: 4, overflow: "hidden", background: INK_SOFT, padding: 0, textAlign: "left" }}>
+                <button key={g.caption} onClick={() => go("portfolio")} className="gallery-frame" style={{ border: `1px solid ${LINE}`, borderRadius: 4, overflow: "hidden", background: WHITE, padding: 0, textAlign: "left" }}>
                   <div style={{ overflow: "hidden", aspectRatio: "4 / 5" }}>
                     <img src={g.src} alt={g.caption} className="gallery-img" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                   </div>
-                  <div className="mono" style={{ color: "rgba(243,232,214,0.7)", fontSize: 10.5, letterSpacing: "0.08em", padding: "10px 12px", textTransform: "uppercase" }}>
+                  <div className="mono" style={{ color: "#8A746B", fontSize: 10.5, letterSpacing: "0.08em", padding: "10px 12px", textTransform: "uppercase" }}>
                     {g.caption}
                   </div>
                 </button>
               ))}
             </div>
             <div style={{ textAlign: "center", marginTop: 20 }}>
-              <button className="ghost-btn" onClick={() => go("portfolio")} style={{ background: "transparent", border: `1px solid rgba(201,162,78,0.5)`, color: GOLD, borderRadius: 20, padding: "10px 22px", fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+              <button className="ghost-btn" onClick={() => go("portfolio")} style={{ background: "transparent", border: `1px solid ${GOLD}`, color: GOLD_DEEP, borderRadius: 20, padding: "10px 22px", fontSize: 12, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
                 View full portfolio
               </button>
             </div>
@@ -1212,9 +1212,9 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
       )}
 
       {view === "portfolio" && (
-        <div style={{ background: INK, padding: "48px 24px 64px", minHeight: "60vh" }}>
+        <div style={{ background: PAPER, padding: "48px 24px 64px", minHeight: "60vh" }}>
           <div style={{ maxWidth: 1000, margin: "0 auto" }}>
-            <div className="mono" style={{ color: GOLD, fontSize: 11, letterSpacing: "0.22em", textAlign: "center", marginBottom: 8 }}>THE PORTFOLIO</div>
+            <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.22em", textAlign: "center", marginBottom: 8 }}>THE PORTFOLIO</div>
             <h2 className="display" style={{ fontSize: 32, textAlign: "center", marginBottom: 20, color: CREAM_TEXT }}>Recent work</h2>
             <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 22 }}>
               {PORTFOLIO_TAGS.map((tag) => (
@@ -1222,9 +1222,9 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
                   key={tag}
                   onClick={() => setGalleryFilter(tag)}
                   style={{
-                    border: `1px solid ${galleryFilter === tag ? GOLD : "rgba(243,232,214,0.3)"}`,
-                    background: galleryFilter === tag ? "rgba(201,162,78,0.18)" : "transparent",
-                    color: galleryFilter === tag ? GOLD : "rgba(243,232,214,0.75)",
+                    border: `1px solid ${galleryFilter === tag ? GOLD : LINE}`,
+                    background: galleryFilter === tag ? "rgba(201,141,147,0.14)" : WHITE,
+                    color: galleryFilter === tag ? GOLD_DEEP : "#8A746B",
                     borderRadius: 20, padding: "8px 16px", fontSize: 12, fontWeight: 600, letterSpacing: "0.04em",
                   }}
                 >
@@ -1234,7 +1234,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
             </div>
             <div className="gallery-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14 }}>
               {GALLERY.filter((g) => (galleryFilter === "All" ? g.type !== "video" : g.tags.includes(galleryFilter))).map((g) => (
-                <div key={g.caption} className="gallery-frame" style={{ border: `1px solid rgba(201,162,78,0.3)`, borderRadius: 4, overflow: "hidden", background: INK_SOFT }}>
+                <div key={g.caption} className="gallery-frame" style={{ border: `1px solid ${LINE}`, borderRadius: 4, overflow: "hidden", background: WHITE }}>
                   <div style={{ overflow: "hidden", aspectRatio: "4 / 5", position: "relative" }}>
                     {g.type === "video" ? (
                       <>
@@ -1244,8 +1244,8 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
                           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                         />
                         <span className="mono" style={{
-                          position: "absolute", top: 8, right: 8, background: "rgba(28,20,16,0.7)", color: GOLD,
-                          fontSize: 9, letterSpacing: "0.08em", padding: "3px 8px", borderRadius: 10, border: `1px solid rgba(201,162,78,0.4)`,
+                          position: "absolute", top: 8, right: 8, background: "rgba(58,43,38,0.65)", color: "#FCEEEA",
+                          fontSize: 9, letterSpacing: "0.08em", padding: "3px 8px", borderRadius: 10, border: `1px solid rgba(255,255,255,0.4)`,
                           pointerEvents: "none",
                         }}>▶ VIDEO</span>
                       </>
@@ -1254,12 +1254,12 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
                     )}
                   </div>
                   <div style={{ padding: "10px 12px" }}>
-                    <div className="mono" style={{ color: "rgba(243,232,214,0.75)", fontSize: 10.5, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>
+                    <div className="mono" style={{ color: "#8A746B", fontSize: 10.5, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>
                       {g.caption}
                     </div>
                     <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                       {g.tags.map((t) => (
-                        <span key={t} className="mono" style={{ fontSize: 9, letterSpacing: "0.06em", color: GOLD, border: `1px solid rgba(201,162,78,0.4)`, borderRadius: 10, padding: "2px 8px" }}>
+                        <span key={t} className="mono" style={{ fontSize: 9, letterSpacing: "0.06em", color: GOLD_DEEP, border: `1px solid ${LINE}`, borderRadius: 10, padding: "2px 8px" }}>
                           {t.toUpperCase()}
                         </span>
                       ))}
@@ -1269,7 +1269,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
               ))}
             </div>
             {GALLERY.filter((g) => (galleryFilter === "All" ? g.type !== "video" : g.tags.includes(galleryFilter))).length === 0 && (
-              <div className="mono" style={{ color: "rgba(243,232,214,0.6)", fontSize: 12, textAlign: "center", padding: "32px 0" }}>
+              <div className="mono" style={{ color: "#8A746B", fontSize: 12, textAlign: "center", padding: "32px 0" }}>
                 More {galleryFilter.toLowerCase()} coming soon.
               </div>
             )}
@@ -1305,7 +1305,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
               </div>
             ))}
             <div style={{ textAlign: "center", marginTop: 8 }}>
-              <button className="cta-btn" onClick={() => go("inquire")} style={{ background: INK, color: CREAM_TEXT, border: "none", borderRadius: 30, padding: "14px 28px", fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+              <button className="cta-btn" onClick={() => go("inquire")} style={{ background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "14px 28px", fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
                 Begin your inquiry
               </button>
             </div>
@@ -1366,7 +1366,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
             </p>
 
             <div style={{ textAlign: "center" }}>
-              <button className="cta-btn" onClick={() => go("inquire")} style={{ background: INK, color: CREAM_TEXT, border: "none", borderRadius: 30, padding: "14px 28px", fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+              <button className="cta-btn" onClick={() => go("inquire")} style={{ background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "14px 28px", fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
                 Celebrate with Ẹwà
               </button>
             </div>
@@ -1645,7 +1645,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
                   className="cta-btn"
                   onClick={checkLedgerPassword}
                   disabled={ledgerChecking}
-                  style={{ background: INK, color: CREAM_TEXT, border: "none", borderRadius: 30, padding: "12px 24px", fontSize: 12.5, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", width: "100%", opacity: ledgerChecking ? 0.6 : 1 }}
+                  style={{ background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "12px 24px", fontSize: 12.5, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", width: "100%", opacity: ledgerChecking ? 0.6 : 1 }}
                 >
                   {ledgerChecking ? "Checking…" : "Unlock"}
                 </button>
@@ -1730,7 +1730,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
             <button
               className="cta-btn"
               onClick={() => setConfirmed(null)}
-              style={{ background: INK, color: CREAM_TEXT, border: "none", borderRadius: 30, padding: "13px 26px", fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}
+              style={{ background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "13px 26px", fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}
             >
               Submit another inquiry
             </button>
@@ -1827,7 +1827,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
               <button
                 className="cta-btn"
                 onClick={submitInquiry}
-                style={{ background: INK, color: CREAM_TEXT, border: "none", borderRadius: 30, padding: "15px 24px", fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", width: "100%" }}
+                style={{ background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "15px 24px", fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", width: "100%" }}
               >
                 Send inquiry
               </button>
