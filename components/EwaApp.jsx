@@ -7,12 +7,34 @@ import { supabase } from "../lib/supabaseClient";
 const FONT_IMPORT = `@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Pinyon+Script&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');`;
 
 const LOGO_SRC = "/images/logo.jpg";
-const SHOT1_SRC = "/images/portfolio-1-ivory-champagne-garlands.jpg";
-const SHOT2_SRC = "/images/portfolio-2-autumn-circle-backdrop.jpg";
+const SHOT1_SRC = "/images/portfolio-new-fall-arch-web.jpg";
+const SHOT2_SRC = "/images/portfolio-2-tableflower.jpg";
 const SHOT3_SRC = "/images/portfolio-3-noir-gold-dinner-setup.jpg";
 const SHOT4_SRC = "/images/portfolio-4-harvest-banquet-styling.jpg";
 const SHOT5_SRC = "/images/portfolio-5-midnight-surprise-setup.jpg";
-const ABBY1_SRC = "/images/founder-abby-1.jpg";
+const SHOT6_SRC = "/images/portfolio-6-engagement-party-gold.jpg";
+const SHOT7_SRC = "/images/portfolio-7-ivory-champagne-garlands.jpg";
+const SHOT8_SRC = "/images/portfolio-8-monogram-rose-bouquet-a.jpg";
+const SHOT9_SRC = "/images/portfolio-9-monogram-rose-bouquet-b.jpg";
+const SHOT10_SRC = "/images/portfolio-10-monogram-rose-bouquet-closeup.jpg";
+const SHOT11_SRC = "/images/portfolio-11-birthday-bouquet-car-reveal-a.jpg";
+const SHOT12_SRC = "/images/portfolio-12-birthday-bouquet-car-reveal-b.jpg";
+const SHOT13_SRC = "/images/portfolio-13-birthday-suite-luminaries.jpg";
+const SHOT14_SRC = "/images/portfolio-14-birthday-suite-dim-wide.jpg";
+const SHOT15_SRC = "/images/portfolio-15-birthday-bouquet-bedside.jpg";
+const SHOT16_SRC = "/images/portfolio-16-birthday-suite-dim-detail.jpg";
+const SHOT17_SRC = "/images/portfolio-17-birthday-suite-dim-lowres.jpg";
+const SHOT18_SRC = "/images/portfolio-18-rhinestone-butterfly-bouquet.jpg";
+const SHOT19_SRC = "/images/portfolio-19-rhinestone-butterfly-bouquet-alt.jpg";
+const SHOT20_SRC = "/images/portfolio-20-client-with-bouquet.jpg";
+const SHOT21_SRC = "/images/portfolio-21-client-with-bouquet-alt.jpg";
+const SHOT22_SRC = "/images/portfolio-22-welcome-column-holiday-entry.jpg";
+const SHOT23_SRC = "/images/portfolio-23-reception-table-setting.jpg";
+const SHOT24_SRC = "/images/portfolio-24-album-launch-dual-backdrop.jpg";
+const SHOT25_SRC = "/images/portfolio-25-engagement-arch-wide.jpg";
+const SHOT26_SRC = "/images/portfolio-26-engagement-arch-closeup.jpg";
+const SHOT27_SRC = "/images/portfolio-27-engagement-welcome-sign.jpg";
+const SHOT28_SRC = "/images/portfolio-28-engagement-photo-display.jpg";
 const ABBY2_SRC = "/images/founder-abby-2.jpg";
 const CLIP1_SRC = "/videos/video-1-reveal-moment.mp4";
 const CLIP2_SRC = "/videos/video-2-setup-walkthrough.mp4";
@@ -94,14 +116,39 @@ const TESTIMONIALS = [
 
 const CONTACT = { phone: "202-769-7282", email: "eventwithabby@gmail.com" };
 
-const PORTFOLIO_TAGS = ["All", "Birthdays", "Dinners & corporate", "Backdrops", "Surprises", "Videos"];
+const PORTFOLIO_TAGS = ["All", "Birthdays", "Dinners & corporate", "Backdrops", "Surprises", "Videos", "Engagements","Flower Bouquets"];
 
 const GALLERY = [
-  { type: "image", src: SHOT2_SRC, caption: "Ivory & champagne garlands", tags: ["Birthdays", "Backdrops"] },
+  { type: "image", src: SHOT6_SRC, caption: "Engagement party gold", tags: ["Engagements","Backdrops"] },
+  { type: "image", src: SHOT2_SRC, caption: "Flower Table Setup", tags: ["Birthdays", "Dinners & corporate"] },
   { type: "image", src: SHOT1_SRC, caption: "Autumn circle backdrop", tags: ["Birthdays", "Backdrops"] },
   { type: "image", src: SHOT5_SRC, caption: "Noir & gold dinner", tags: ["Dinners & corporate"] },
   { type: "image", src: SHOT4_SRC, caption: "Harvest banquet styling", tags: ["Dinners & corporate"] },
   { type: "image", src: SHOT3_SRC, caption: "Midnight surprise setup", tags: ["Birthdays", "Surprises"] },
+  { type: "image", src: SHOT7_SRC, caption: "Ivory & champagne garlands", tags: ["Birthdays", "Backdrops"] },
+  // { type: "image", src: SHOT8_SRC, caption: "Monogram rose bouquet", tags: ["Flower Bouquets"] },
+  // { type: "image", src: SHOT9_SRC, caption: "Monogram rose bouquet alt", tags: ["Flower Bouquets"] },
+  // { type: "image", src: SHOT10_SRC, caption: "Monogram rose bouquet closeup", tags: ["Flower Bouquets"] },
+  { type: "image", src: SHOT11_SRC, caption: "Master's Degree bouquet", tags: ["Flower Bouquets", "Surprises"] },
+  // { type: "image", src: SHOT12_SRC, caption: "Birthday bouquet car reveal alt", tags: ["Birthdays", "Surprises"] },
+  { type: "image", src: SHOT13_SRC, caption: "Birthday suite luminaries", tags: ["Birthdays"] },
+  { type: "image", src: SHOT14_SRC, caption: "Birthday suite dim wide", tags: ["Birthdays"] },
+  { type: "image", src: SHOT15_SRC, caption: "Birthday bouquet bedside", tags: ["Birthdays"] },
+  // { type: "image", src: SHOT16_SRC, caption: "Birthday suite dim detail", tags: ["Birthdays"] },
+  { type: "image", src: SHOT17_SRC, caption: "Birthday suite dim lowres", tags: ["Birthdays"] },
+  { type: "image", src: SHOT18_SRC, caption: "Rhinestone butterfly bouquet", tags: ["Flower Bouquets"] },
+  { type: "image", src: SHOT19_SRC, caption: "Rhinestone butterfly bouquet alt", tags: ["Flower Bouquets"] },
+  { type: "image", src: SHOT20_SRC, caption: "Client with bouquet", tags: ["Flower Bouquets"] },
+  { type: "image", src: SHOT21_SRC, caption: "Client with bouquet alt", tags: ["Flower Bouquets"] },
+  { type: "image", src: SHOT22_SRC, caption: "Welcome column holiday entry", tags: ["Backdrops"] }, 
+  { type: "image", src: SHOT23_SRC, caption: "Reception table setting", tags: ["Dinners & corporate"] },
+  { type: "image", src: SHOT24_SRC, caption: "Album launch dual backdrop", tags: ["Backdrops"] },
+  { type: "image", src: SHOT25_SRC, caption: "Engagement arch wide", tags: ["Engagements","Backdrops"] },
+  { type: "image", src: SHOT26_SRC, caption: "Engagement arch closeup", tags: ["Engagements","Backdrops"] },
+  { type: "image", src: SHOT27_SRC, caption: "Engagement welcome sign", tags: ["Engagements","Backdrops"] },
+  { type: "image", src: SHOT28_SRC, caption: "Engagement photo display", tags: ["Engagements","Backdrops"] },
+  
+
   { type: "video", src: CLIP1_SRC, poster: POSTER1_SRC, caption: "Reveal moment", tags: ["Videos"] },
   { type: "video", src: CLIP2_SRC, poster: POSTER2_SRC, caption: "Setup walkthrough", tags: ["Videos"] },
   { type: "video", src: CLIP3_SRC, poster: POSTER3_SRC, caption: "Styling in motion", tags: ["Videos"] },
@@ -921,7 +968,7 @@ async function callConciergeAPI(prompt) {
 
     const contact = { phone: "202-769-7282", email: "eventwithabby@gmail.com" };
     const convo = history.map((m) => `${m.role === "user" ? "Client" : "Concierge"}: ${m.text}`).join("\n");
-    const prompt = `You are the style concierge for Ewa (Events with Abby), a luxury event styling studio in Charlotte, NC, founded by Abby. Ewa means "beauty" in Yoruba. Tagline: "Where intentionality meets elegance."
+    const prompt = `You are the style concierge for Ẹwà (Events with Abby), a luxury event styling studio in Charlotte, NC, founded by Abby. Ewa means "beauty" in Yoruba. Tagline: "Where intentionality meets elegance."
 Abby's direct contact: phone ${contact.phone}, email ${contact.email}. If a client asks to speak with a human, reach Abby directly, wants her contact info, or asks for a phone number/Instagram/etc, give them this phone number and email directly and warmly point them to the inquiry form as the fastest way to get a tailored quote. Never say you don't have her contact info, never invent a different contact method, and never ask them to leave their info in the chat.
 
 Services & starting prices (currently discounted): Luxury decor — Standard $350, Deluxe $700, Premium $1,200 (add-ons: name signage, neon lights, flower walls). Event planning — Classic $300, Premium $900, Corporate $600. Romantic & surprise — Proposal setup $350, Room/hotel surprise $250, Dinner & intimate tablescapes $300. Gifting — Flower bouquet $50, Money bouquet/box $80, Gift wrapping $50. Custom event concept consultation $100. All bookings require a consultation for a tailored quote.
