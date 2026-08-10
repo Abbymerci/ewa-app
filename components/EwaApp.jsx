@@ -33,6 +33,7 @@ const BLUSH = "#E8B4B0";
 const SAGE = "#8E9B7C";
 const LINE = "#F0DCD3";
 const CREAM_TEXT = "#3A2B26";
+const CREAM_BG = "#FCF2ED";
 
 const SERVICES = [
   { id: "decor", label: "Luxury décor & styling" },
@@ -91,7 +92,7 @@ const TESTIMONIALS = [
   { quote: "I ordered a money bouquet from ẸWÀ, and it was beyond perfect!", name: "A happy client" },
 ];
 
-const CONTACT = { phone: "202-769-7282", email: "abbysola11@gmail.com" };
+const CONTACT = { phone: "202-769-7282", email: "eventwithabby@gmail.com" };
 
 const PORTFOLIO_TAGS = ["All", "Birthdays", "Dinners & corporate", "Backdrops", "Surprises", "Videos"];
 
@@ -869,49 +870,46 @@ export default function EwaApp() {
     };
   }
 
-  async function callConciergeAPI(prompt) {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: prompt }],
-      }),
-    });
-    // Read as text first — some environments return non-JSON error bodies
-    const bodyText = await response.text();
-    let data;
-    try {
-      data = JSON.parse(bodyText);
-    } catch {
-      throw new Error(`Bad response (${response.status})`);
-    }
-    if (!response.ok || data.error) {
-      throw new Error(data?.error?.message || `Request failed (${response.status})`);
-    }
-    const raw = (data.content || [])
-      .filter((c) => c.type === "text")
-      .map((c) => c.text || "")
-      .join("")
-      .replace(/```json|```/g, "")
-      .trim();
-    let parsed = null;
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      const start = raw.indexOf("{");
-      const end = raw.lastIndexOf("}");
-      if (start !== -1 && end > start) {
-        try { parsed = JSON.parse(raw.slice(start, end + 1)); } catch { parsed = null; }
-      }
-    }
-    if (!parsed || typeof parsed.reply !== "string") {
-      if (raw) return { reply: raw, suggestion: null };
-      throw new Error("Empty response");
-    }
-    return parsed;
+async function callConciergeAPI(prompt) {
+  
+  const response = await fetch("/api/concierge", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt }),
+  });
+  // Read as text first — some environments return non-JSON error bodies
+  const bodyText = await response.text();
+  let data;
+  try {
+    data = JSON.parse(bodyText);
+  } catch {
+    throw new Error(`Bad response (${response.status})`);
   }
+  if (!response.ok || data.error) {
+    throw new Error(data?.error?.message || `Request failed (${response.status})`);
+  }
+  const raw = (data.content || [])
+    .filter((c) => c.type === "text")
+    .map((c) => c.text || "")
+    .join("")
+    .replace(/```json|```/g, "")
+    .trim();
+  let parsed = null;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    const start = raw.indexOf("{");
+    const end = raw.lastIndexOf("}");
+    if (start !== -1 && end > start) {
+      try { parsed = JSON.parse(raw.slice(start, end + 1)); } catch { parsed = null; }
+    }
+  }
+  if (!parsed || typeof parsed.reply !== "string") {
+    if (raw) return { reply: raw, suggestion: null };
+    throw new Error("Empty response");
+  }
+  return parsed;
+}
 
   async function sendChat() {
     const text = chatInput.trim();
@@ -921,8 +919,10 @@ export default function EwaApp() {
     setChatMessages(history);
     setChatBusy(true);
 
+    const contact = { phone: "202-769-7282", email: "eventwithabby@gmail.com" };
     const convo = history.map((m) => `${m.role === "user" ? "Client" : "Concierge"}: ${m.text}`).join("\n");
     const prompt = `You are the style concierge for Ewa (Events with Abby), a luxury event styling studio in Charlotte, NC, founded by Abby. Ewa means "beauty" in Yoruba. Tagline: "Where intentionality meets elegance."
+Abby's direct contact: phone ${contact.phone}, email ${contact.email}. If a client asks to speak with a human, reach Abby directly, wants her contact info, or asks for a phone number/Instagram/etc, give them this phone number and email directly and warmly point them to the inquiry form as the fastest way to get a tailored quote. Never say you don't have her contact info, never invent a different contact method, and never ask them to leave their info in the chat.
 
 Services & starting prices (currently discounted): Luxury decor — Standard $350, Deluxe $700, Premium $1,200 (add-ons: name signage, neon lights, flower walls). Event planning — Classic $300, Premium $900, Corporate $600. Romantic & surprise — Proposal setup $350, Room/hotel surprise $250, Dinner & intimate tablescapes $300. Gifting — Flower bouquet $50, Money bouquet/box $80, Gift wrapping $50. Custom event concept consultation $100. All bookings require a consultation for a tailored quote.
 
@@ -933,6 +933,7 @@ Available venue ids: studio, banquet, home, noir (evening/moody).
 
 Conversation so far:
 ${convo}
+
 
 Respond ONLY with valid JSON, no markdown fences, in exactly this format:
 {"reply": "your conversational message", "suggestion": {"shapeId": "one of the shape ids", "shapeLabel": "human label", "colors": ["#hex1", "#hex2", "#hex3"], "venueId": "one of the venue ids", "packageName": "short package name matching the real menu", "packageFrom": "$X", "rationale": "one sentence on why this suits them"}}
@@ -1420,7 +1421,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
                     <div style={{
                       maxWidth: "82%", padding: "11px 15px", borderRadius: m.role === "user" ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
                       background: m.role === "user" ? INK : "#FBF3E1",
-                      color: m.role === "user" ? CREAM_TEXT : INK,
+                      color: m.role === "user" ? CREAM_BG : INK,
                       fontSize: 14, lineHeight: 1.55,
                       border: m.role === "user" ? "none" : `1px solid ${LINE}`,
                     }}>
@@ -1477,7 +1478,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
                   className="cta-btn"
                   onClick={sendChat}
                   disabled={chatBusy}
-                  style={{ background: chatBusy ? LINE : INK, color: CREAM_TEXT, border: "none", borderRadius: 24, padding: "12px 22px", fontSize: 12.5, fontWeight: 700, letterSpacing: "0.06em" }}
+                  style={{ background: chatBusy ? LINE : INK, color: CREAM_BG, border: "none", borderRadius: 24, padding: "12px 22px", fontSize: 12.5, fontWeight: 700, letterSpacing: "0.06em" }}
                 >
                   Send
                 </button>
