@@ -85,7 +85,7 @@ export async function POST(req) {
 
 ## 5. Email alerts on new inquiries
 1. Create a free account at resend.com, verify a sending domain (or use their test domain)
-2. Add `RESEND_API_KEY` and `NOTIFY_EMAIL` to Vercel's environment variables
+2. Add `RESEND_API` and `NOTIFY_EMAIL` to Vercel's environment variables
 3. In your Supabase-insert code from Step 3, call a small `/api/notify` route right after a
    successful insert, which sends Abby an email with the inquiry details via Resend
 

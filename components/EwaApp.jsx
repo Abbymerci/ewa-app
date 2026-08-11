@@ -44,6 +44,7 @@ const POSTER1_SRC = "/videos/video-1-poster.jpg";
 const POSTER2_SRC = "/videos/video-2-poster.jpg";
 const POSTER3_SRC = "/videos/video-3-poster.jpg";
 const POSTER4_SRC = "/videos/video-4-poster.jpg";
+const ABBY1_SRC = "/images/founder-abby-1.jpg";
 
 const INK = "#3A2B26";
 const INK_SOFT = "#5C463E";
@@ -68,44 +69,48 @@ const SERVICES = [
 
 const PACKAGES = [
   {
-    category: "💎 Event Planning & Coordination",
+    category: "Luxury Décor & Styling",
     items: [
-      { name: "Classic Planning Package", was: "$650", now: "$300", desc: "Perfect for birthdays, bridal showers, or baby showers. Theme consultation, vendor coordination, and day-of management." },
-      { name: "Premium Planning Package", was: "$1,200", now: "$900", desc: "Full-service planning — concept design to flawless execution, with vendor sourcing, decor design, and on-site management." },
-      { name: "Corporate or Brand Events", was: "$1,000", now: "$600", desc: "Professional, elegant setups for launches, office parties, and corporate celebrations." },
+      { name: "Standard Décor Setup", now: "$350", popular: true, desc: "Balloon arches, backdrop, and basic table styling." },
+      { name: "Deluxe Décor Setup", now: "$700", desc: "Full themed design with florals, luxury backdrops, lighting, and table styling." },
+      { name: "Premium Luxury Setup", now: "$1,200", desc: "Complete event transformation — custom props, florals, and high-end finishes. Add-ons: name signage, neon lights, flower walls." },
     ],
   },
   {
-    category: "🌸 Luxury Décor & Styling",
+    category: "Romantic & Surprise Experiences",
     items: [
-      { name: "Standard Décor Setup", was: null, now: "$350", desc: "Balloon arches, backdrop, and basic table styling." },
-      { name: "Deluxe Décor Setup", was: null, now: "$700", desc: "Full themed design with florals, luxury backdrops, lighting, and table styling." },
-      { name: "Premium Luxury Setup", was: null, now: "$1,200", desc: "Complete event transformation — custom props, florals, and high-end finishes. Add-ons: name signage, neon lights, flower walls." },
+      { name: "Room or Hotel Surprise", now: "$250", desc: "Perfect for birthdays, anniversaries, or \"just because\" — décor, candles, and personalized accents." },
+      { name: "Dinner & Intimate Experiences", now: "$300", desc: "Custom-designed tablescapes for private dinners, date nights, or celebrations." },
+      { name: "Proposal Setup", now: "$350", popular: true, desc: "Personalized romantic designs with candles, flowers, balloons, and message setup." },
+     
+      
+      
     ],
   },
   {
-    category: "💍 Romantic & Surprise Experiences",
+    category: "Gifting & Presentation",
     items: [
-      { name: "Proposal Setup", was: "$450", now: "$350", desc: "Personalized romantic designs with candles, flowers, balloons, and message setup." },
-      { name: "Room or Hotel Surprise", was: "$300", now: "$250", desc: "Perfect for birthdays, anniversaries, or \"just because\" — décor, candles, and personalized accents." },
-      { name: "Dinner & Intimate Experiences", was: "$400", now: "$300", desc: "Custom-designed tablescapes for private dinners, date nights, or celebrations." },
+      { name: "Flower Bouquet", now: "$50", desc: "Fresh or faux floral designs styled with elegance." },
+      { name: "Gift Wrapping & Packaging", now: "$50", desc: "Luxury wrapping, themed boxes, or presentation baskets for any occasion." },
+      { name: "Money Bouquet / Box", now: "$80", popular: true, desc: "Creative, luxurious money bouquet designs perfect for birthdays or surprises." },
     ],
   },
   {
-    category: "💐 Gifting & Presentation",
+    category: "Event Planning & Coordination",
     items: [
-      { name: "Flower Bouquet", was: "$75", now: "$50", desc: "Fresh or faux floral designs styled with elegance." },
-      { name: "Money Bouquet / Box", was: "$120", now: "$80", desc: "Creative, luxurious money bouquet designs perfect for birthdays or surprises." },
-      { name: "Gift Wrapping & Packaging", was: null, now: "$50", desc: "Luxury wrapping, themed boxes, or presentation baskets for any occasion." },
+      { name: "Classic Planning Package", now: "$300", popular: true, desc: "Perfect for birthdays, bridal showers, or baby showers. Theme consultation, vendor coordination, and day-of management." },
+      { name: "Premium Planning Package", now: "$900", desc: "Full-service planning — concept design to flawless execution, with vendor sourcing, decor design, and on-site management." },
+      { name: "Corporate or Brand Events", now: "$600", desc: "Professional, elegant setups for launches, office parties, and corporate celebrations." },
     ],
   },
   {
-    category: "🌟 Custom Experiences",
+    category: "Custom Experiences",
     items: [
-      { name: "Personalized Event Concept", was: "$200", now: "$100", desc: "Design consultation for unique or themed experiences." },
-      { name: "Rentals & Props", was: null, now: "On request", desc: "Luxury chairs, floral stands, or balloon frames — pricing varies by item and duration." },
+      { name: "Personalized Event Concept", now: "$100", desc: "Design consultation for unique or themed experiences." },
+      { name: "Rentals & Props", now: "On request", desc: "Luxury chairs, floral stands, or balloon frames — pricing varies by item and duration." },
     ],
   },
+  
 ];
 
 const TESTIMONIALS = [
@@ -113,7 +118,6 @@ const TESTIMONIALS = [
   { quote: "I walked into the room and literally couldn't believe my eyes. It was breathtaking! Abby and the ẸWÀ team completely transformed the space — soft lights, elegant décor, everything felt so intentional. You can feel the love in her work.", name: "Temi" },
   { quote: "I ordered a money bouquet from ẸWÀ, and it was beyond perfect!", name: "A happy client" },
 ];
-
 const CONTACT = { phone: "202-769-7282", email: "eventwithabby@gmail.com" };
 
 const PORTFOLIO_TAGS = ["All", "Birthdays", "Dinners & corporate", "Backdrops", "Surprises", "Videos", "Engagements","Flower Bouquets"];
@@ -147,7 +151,7 @@ const GALLERY = [
   { type: "image", src: SHOT26_SRC, caption: "Engagement arch closeup", tags: ["Engagements","Backdrops"] },
   { type: "image", src: SHOT27_SRC, caption: "Engagement welcome sign", tags: ["Engagements","Backdrops"] },
   { type: "image", src: SHOT28_SRC, caption: "Engagement photo display", tags: ["Engagements","Backdrops"] },
-  
+
 
   { type: "video", src: CLIP1_SRC, poster: POSTER1_SRC, caption: "Reveal moment", tags: ["Videos"] },
   { type: "video", src: CLIP2_SRC, poster: POSTER2_SRC, caption: "Setup walkthrough", tags: ["Videos"] },
@@ -820,32 +824,40 @@ export default function EwaApp() {
     scrollToForm();
   }
 
-  async function submitInquiry() {
-    if (selectedServices.length === 0) return setError("Pick at least one service.");
-    if (!form.eventDate) return setError("Add your event date.");
-    if (!form.name.trim() || !form.email.trim()) return setError("Add your name and email.");
-    if (!supabase) return setError("Storage isn't connected yet — add your Supabase keys to .env.local (see DEPLOYMENT.md).");
-    setError("");
-    const draft = {
-      id: `${Date.now()}`, // temporary, only used to compute a ref_code before Supabase assigns a real id
-      services: selectedServices.map((sid) => SERVICES.find((s) => s.id === sid).label),
-      ...form,
-      guestCount: form.guestCount.trim(),
-      status: "New",
-    };
-    const row = inquiryToRow(draft, savedLook);
-    const { data, error } = await supabase.from("inquiries").insert(row).select().single();
-    if (error) {
-      setError("Could not submit — please try again in a moment.");
-      return;
-    }
-    const inquiry = rowToInquiry(data);
-    setInquiries((prev) => [...prev, inquiry].sort((a, b) => a.eventDate.localeCompare(b.eventDate)));
-    setConfirmed(inquiry);
-    setSelectedServices([]);
-    setSavedLook(null);
-    setForm({ eventDate: "", eventType: EVENT_TYPES[0], guestCount: "", budget: BUDGETS[0], name: "", email: "", phone: "", message: "" });
+ async function submitInquiry() {
+  if (selectedServices.length === 0) return setError("Pick at least one service.");
+  if (!form.eventDate) return setError("Add your event date.");
+  if (!form.name.trim() || !form.email.trim()) return setError("Add your name and email.");
+  if (!supabase) return setError("Storage isn't connected yet — add your Supabase keys to .env.local (see DEPLOYMENT.md).");
+  setError("");
+  const draft = {
+    id: `${Date.now()}`, // temporary, only used to compute a ref_code before Supabase assigns a real id
+    services: selectedServices.map((sid) => SERVICES.find((s) => s.id === sid).label),
+    ...form,
+    guestCount: form.guestCount.trim(),
+    status: "New",
+  };
+  const row = inquiryToRow(draft, savedLook);
+  const { data, error } = await supabase.from("inquiries").insert(row).select().single();
+  if (error) {
+    setError("Could not submit — please try again in a moment.");
+    return;
   }
+  const inquiry = rowToInquiry(data);
+  setInquiries((prev) => [...prev, inquiry].sort((a, b) => a.eventDate.localeCompare(b.eventDate)));
+
+  // Notify Abby — fire and forget, never blocks the client's confirmation
+  fetch("/api/notify-inquiry", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(draft),
+  }).catch(() => {}); // if the email fails, the inquiry is still safely saved in Supabase
+
+  setConfirmed(inquiry);
+  setSelectedServices([]);
+  setSavedLook(null);
+  setForm({ eventDate: "", eventType: EVENT_TYPES[0], guestCount: "", budget: BUDGETS[0], name: "", email: "", phone: "", message: "" });
+}
 
   async function cycleStatus(id) {
     if (!supabase) return;
@@ -1052,6 +1064,65 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
     fontFamily: "'Manrope', sans-serif", background: "transparent", color: INK, width: "100%",
   };
   const labelStyle = { fontSize: 11, fontWeight: 700, color: GOLD_DEEP, marginBottom: 8, display: "block", letterSpacing: "0.14em", textTransform: "uppercase" };
+
+
+const [viewHistory, setViewHistory] = useState([]);
+
+function go(v) {
+  setViewHistory((prev) => [...prev, view]); // remember where we're leaving from
+  setView(v);
+  setMenuOpen(false);
+  setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
+}
+
+function goBack() {
+  setViewHistory((prev) => {
+    if (prev.length === 0) {
+      setView("home");
+      return prev;
+    }
+    const next = [...prev];
+    const last = next.pop();
+    setView(last);
+    return next;
+  });
+  setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
+}
+
+
+function BackButton() {
+  if (view === "home") return null;
+  return (
+    <button
+      onClick={goBack}
+      className="ghost-btn"
+      style={{
+        display: "inline-flex", alignItems: "center", gap: 6, background: "transparent",
+        border: "none", color: GOLD_DEEP, fontSize: 12.5, fontWeight: 600, padding: "4px 0", marginBottom: 16,
+      }}
+    >
+      ← Back
+    </button>
+  );
+}
+
+  function selectServiceAndInquire(categoryName, item) {
+  const categoryServiceMap = {
+    "Event Planning & Coordination": "planning",
+    "Luxury Décor & Styling": "decor",
+    "Romantic & Surprise Experiences": "romantic",
+    "Gifting & Presentation": "gifting",
+    "Custom Experiences": "custom",
+  };
+  const serviceId = categoryServiceMap[categoryName];
+  if (serviceId && !selectedServices.includes(serviceId)) {
+    setSelectedServices((prev) => [...prev, serviceId]);
+  }
+  const priceLabel = item.now === "On request" ? item.now : `from ${item.now}`;
+  const note = `Interested in: ${item.name} (${priceLabel})`;
+  setForm((f) => ({ ...f, message: f.message ? `${f.message}\n${note}` : note }));
+  scrollToForm();
+}
 
   return (
     <div style={{ minHeight: "100vh", background: PAPER, fontFamily: "'Manrope', sans-serif", color: INK }}>
@@ -1325,45 +1396,67 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
         </div>
       )}
 
-      {view === "services" && (
-        <div style={{ background: PAPER, padding: "48px 24px 40px" }}>
-          <div style={{ maxWidth: 760, margin: "0 auto" }}>
-            <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.22em", textAlign: "center", marginBottom: 8 }}>SERVICES &amp; PRICING</div>
-            <h2 className="display" style={{ fontSize: 32, textAlign: "center", marginBottom: 8 }}>The Ẹwà menu</h2>
-            <p style={{ fontSize: 13, color: "#8A746B", textAlign: "center", marginBottom: 32, maxWidth: 440, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
-              Prices vary by event size, location, materials, and customization — every booking begins with a consultation to finalize your tailored quote.
-            </p>
-            {PACKAGES.map((cat) => (
-              <div key={cat.category} style={{ marginBottom: 28 }}>
-                <h3 className="display" style={{ fontSize: 20, marginBottom: 12, color: INK }}>{cat.category}</h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {cat.items.map((item) => (
-                    <div key={item.name} style={{ background: WHITE, border: `1px solid ${LINE}`, borderRadius: 8, padding: "14px 18px", display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap" }}>
-                      <div style={{ flex: "1 1 260px" }}>
-                        <div style={{ fontWeight: 700, fontSize: 14 }}>{item.name}</div>
-                        <div style={{ fontSize: 12.5, color: "#8A746B", marginTop: 4, lineHeight: 1.55 }}>{item.desc}</div>
-                      </div>
-                      <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
-                        {item.was && <span className="mono" style={{ fontSize: 12, color: "#B0A090", textDecoration: "line-through", marginRight: 8 }}>{item.was}</span>}
-                        <span className="mono" style={{ fontSize: 15, fontWeight: 700, color: GOLD_DEEP }}>{item.now === "On request" ? item.now : `from ${item.now}`}</span>
-                      </div>
-                    </div>
-                  ))}
+     {view === "services" && (
+  <div style={{ background: PAPER, padding: "48px 24px 40px" }}>
+    <div style={{ maxWidth: 760, margin: "0 auto" }}>
+      <BackButton />
+      <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.22em", textAlign: "center", marginBottom: 8 }}>SERVICES &amp; PRICING</div>
+      <h2 className="display" style={{ fontSize: 32, textAlign: "center", marginBottom: 8 }}>The Ẹwà menu</h2>
+      <p style={{ fontSize: 13, color: "#8A746B", textAlign: "center", marginBottom: 32, maxWidth: 440, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
+        Prices vary by event size, location, materials, and customization — every booking begins with a consultation to finalize your tailored quote.
+      </p>
+      {PACKAGES.map((cat) => (
+        <div key={cat.category} style={{ marginBottom: 28 }}>
+          <div className="mono" style={{ fontSize: 11, letterSpacing: "0.14em", color: GOLD_DEEP, marginBottom: 12, textTransform: "uppercase" }}>
+            {cat.category}
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {cat.items.map((item) => (
+              <button
+                key={item.name}
+                onClick={() => selectServiceAndInquire(cat.category, item)}
+                className="svc-card"
+                style={{
+                  textAlign: "left", width: "100%", cursor: "pointer",
+                  background: WHITE, border: `1px solid ${item.popular ? GOLD : LINE}`, borderRadius: 8,
+                  padding: "14px 18px", display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap",
+                  boxShadow: item.popular ? "0 4px 16px -8px rgba(169,95,107,0.25)" : "none",
+                }}
+              >
+                <div style={{ flex: "1 1 260px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                    <div style={{ fontWeight: 700, fontSize: 14 }}>{item.name}</div>
+                    {item.popular && (
+                      <span className="mono" style={{ fontSize: 9, letterSpacing: "0.06em", color: GOLD_DEEP, border: `1px solid ${GOLD}`, borderRadius: 10, padding: "2px 8px" }}>
+                        MOST POPULAR
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ fontSize: 12.5, color: "#8A746B", marginTop: 4, lineHeight: 1.55 }}>{item.desc}</div>
                 </div>
-              </div>
-            ))}
-            <div style={{ textAlign: "center", marginTop: 8 }}>
-              <button className="cta-btn" onClick={() => go("inquire")} style={{ background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "14px 28px", fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                Begin your inquiry
+                <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
+                  <span className="mono" style={{ fontSize: 15, fontWeight: 700, color: GOLD_DEEP }}>
+                    {item.now === "On request" ? item.now : `from ${item.now}`}
+                  </span>
+                </div>
               </button>
-            </div>
+            ))}
           </div>
         </div>
-      )}
+      ))}
+      <div style={{ textAlign: "center", marginTop: 8 }}>
+        <button className="cta-btn" onClick={() => go("inquire")} style={{ background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "14px 28px", fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+          Begin your inquiry
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
       {view === "about" && (
         <div style={{ background: PAPER, padding: "48px 24px 56px" }}>
           <div style={{ maxWidth: 680, margin: "0 auto" }}>
+          <BackButton />
             <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.22em", textAlign: "center", marginBottom: 8 }}>OUR STORY</div>
             <h2 className="display" style={{ fontSize: 32, textAlign: "center", marginBottom: 6 }}>About Ẹwà</h2>
             <div className="script" style={{ fontSize: 22, color: GOLD_DEEP, textAlign: "center", marginBottom: 28 }}>Where intentionality meets elegance</div>
@@ -1425,6 +1518,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
       {view === "testimonials" && (
         <div style={{ background: PAPER, padding: "48px 24px 56px", minHeight: "50vh" }}>
           <div style={{ maxWidth: 760, margin: "0 auto" }}>
+            <BackButton />
             <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.22em", textAlign: "center", marginBottom: 8 }}>KIND WORDS</div>
             <h2 className="display" style={{ fontSize: 30, textAlign: "center", marginBottom: 24 }}>What clients say</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -1445,6 +1539,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
       <main style={{ maxWidth: 720, margin: "0 auto", padding: ["ledger", "visualize", "concierge", "inquire"].includes(view) ? "48px 24px 80px" : "0" }}>
         {view === "concierge" ? (
           <div>
+            <BackButton />
             <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.16em", marginBottom: 6, textAlign: "center" }}>AI STYLE CONCIERGE</div>
             <h2 className="display" style={{ fontSize: 32, marginBottom: 10, color: INK, textAlign: "center" }}>Describe your dream event</h2>
             <p style={{ fontSize: 14, color: "#8A746B", marginBottom: 24, textAlign: "center", maxWidth: 460, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
@@ -1757,7 +1852,11 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
           </div>
         ) : view === "inquire" ? (
           confirmed ? (
+            
           <div style={{ background: WHITE, border: `1px solid ${LINE}`, borderRadius: 4, padding: "48px 36px", textAlign: "center", marginTop: 56, boxShadow: "0 20px 50px -20px rgba(28,20,16,0.15)" }}>
+          <div style={{ textAlign: "left" }}>
+            <BackButton />
+          </div>
             <div style={{
               width: 76, height: 76, borderRadius: "50%", border: `2px solid ${GOLD}`, margin: "0 auto 18px",
               display: "flex", alignItems: "center", justifyContent: "center", position: "relative",
@@ -1785,6 +1884,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
           </div>
         ) : (
           <div ref={formRef}>
+            <BackButton />
             <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.18em", marginBottom: 8, textAlign: "center" }}>REQUEST A CONSULTATION</div>
             <h2 className="display" style={{ fontSize: 34, textAlign: "center", marginBottom: 10 }}>Tell us about your event</h2>
             <p style={{ fontSize: 14, color: "#8A746B", marginBottom: 36, textAlign: "center", maxWidth: 420, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
