@@ -1333,6 +1333,7 @@ function BackButton() {
       {view === "portfolio" && (
         <div style={{ background: PAPER, padding: "48px 24px 64px", minHeight: "60vh" }}>
           <div style={{ maxWidth: 1000, margin: "0 auto" }}>
+            <BackButton />
             <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.22em", textAlign: "center", marginBottom: 8 }}>THE PORTFOLIO</div>
             <h2 className="display" style={{ fontSize: 32, textAlign: "center", marginBottom: 20, color: CREAM_TEXT }}>Recent work</h2>
             <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap", marginBottom: 22 }}>
@@ -1629,6 +1630,7 @@ function BackButton() {
           </div>
         ) : view === "visualize" ? (
           <div>
+            <BackButton />
             <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.16em", marginBottom: 6, textAlign: "center" }}>3D STYLE PREVIEW</div>
             <h2 className="display" style={{ fontSize: 32, marginBottom: 10, color: INK, textAlign: "center" }}>Picture it before it's built</h2>
             <p style={{ fontSize: 14, color: "#8A746B", marginBottom: 28, textAlign: "center", maxWidth: 460, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
