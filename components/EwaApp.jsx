@@ -1320,14 +1320,7 @@ function BackButton() {
           </div>
 
           {/* CONTACT STRIP */}
-          <div style={{ background: "#E8C2C4", padding: "26px 24px", textAlign: "center" }}>
-            <div className="display" style={{ fontSize: 18, fontStyle: "italic", color: INK, marginBottom: 6 }}>Need to speak with Ẹwà?</div>
-            <div style={{ fontSize: 14, color: INK }}>
-              Call or email to book: <a href={`tel:${CONTACT.phone.replace(/-/g, "")}`} style={{ color: INK, fontWeight: 700 }}>{CONTACT.phone}</a>
-              {" "}·{" "}
-              <a href={`mailto:${CONTACT.email}`} style={{ color: INK, fontWeight: 700 }}>{CONTACT.email}</a>
-            </div>
-          </div>
+         
         </>
       )}
 
@@ -1988,25 +1981,28 @@ function BackButton() {
         ) : null}
       </main>
       <footer style={{ borderTop: `1px solid ${LINE}`, padding: "26px 24px", textAlign: "center" }}>
-        <div className="script" style={{ fontSize: 22, color: GOLD_DEEP, marginBottom: 6 }}>Where intentionality meets elegance</div>
-        <div className="mono" style={{ fontSize: 10.5, letterSpacing: "0.14em", color: "#8A746B", marginBottom: 10 }}>
-          ẸWÀ · CHARLOTTE, NC · {CONTACT.phone}, {CONTACT.email}
-        </div>
-        <a
-          href="https://www.instagram.com/eventwithabby/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mono"
-          style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10.5, letterSpacing: "0.1em", color: GOLD_DEEP, textDecoration: "none" }}
-        >
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="2" y="2" width="20" height="20" rx="5" />
-            <circle cx="12" cy="12" r="4" />
-            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-          </svg>
-          @eventwithabby
-        </a>
-      </footer>
+  <div className="script" style={{ fontSize: 22, color: GOLD_DEEP, marginBottom: 6 }}>Where intentionality meets elegance</div>
+  <div className="mono" style={{ fontSize: 10.5, letterSpacing: "0.14em", color: "#8A746B", marginBottom: 10 }}>
+    ẸWÀ · CHARLOTTE, NC ·{" "}
+    <a href={`tel:${CONTACT.phone.replace(/-/g, "")}`} style={{ color: "#8A746B", textDecoration: "underline" }}>{CONTACT.phone}</a>
+    {", "}
+    <a href={`mailto:${CONTACT.email}`} style={{ color: "#8A746B", textDecoration: "underline" }}>{CONTACT.email}</a>
+  </div>
+  <a
+    href="https://www.instagram.com/eventwithabby/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="mono"
+    style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10.5, letterSpacing: "0.1em", color: GOLD_DEEP, textDecoration: "none" }}
+  >
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <rect x="2" y="2" width="20" height="20" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
+    @eventwithabby
+  </a>
+</footer>
     </div>
   );
 }
