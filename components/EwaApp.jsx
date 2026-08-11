@@ -99,8 +99,8 @@ const PACKAGES = [
     category: "Event Planning & Coordination",
     items: [
       { name: "Classic Planning Package", now: "$300", popular: true, desc: "Perfect for birthdays, bridal showers, or baby showers. Theme consultation, vendor coordination, and day-of management." },
-      { name: "Premium Planning Package", now: "$900", desc: "Full-service planning — concept design to flawless execution, with vendor sourcing, decor design, and on-site management." },
       { name: "Corporate or Brand Events", now: "$600", desc: "Professional, elegant setups for launches, office parties, and corporate celebrations." },
+      { name: "Premium Planning Package", now: "$900", desc: "Full-service planning — concept design to flawless execution, with vendor sourcing, decor design, and on-site management." },
     ],
   },
   {
@@ -718,12 +718,36 @@ export default function EwaApp() {
 
   // Private entry point: bookmark a link like yoursite.com/?owner=ledger — it's not
   // listed anywhere in the visible menu, so clients never encounter it while browsing.
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("owner") === "ledger") setView("ledger");
+ useEffect(() => {
+  if (typeof window !== "undefined") {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("owner") === "ledger") {
+      setView("ledger");
+    } else {
+      const v = params.get("view");
+      const validViews = ["home", "concierge", "visualize", "services", "portfolio", "about", "testimonials", "inquire"];
+      if (v && validViews.includes(v)) setView(v);
     }
-  }, []);
+  }
+}, []);
+
+useEffect(() => {
+  function handlePopState() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("owner") === "ledger") {
+      setView("ledger");
+      return;
+    }
+    const v = params.get("view");
+    const validViews = ["home", "concierge", "visualize", "services", "portfolio", "about", "testimonials", "inquire"];
+    setView(v && validViews.includes(v) ? v : "home");
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
+  }
+  window.addEventListener("popstate", handlePopState);
+  return () => window.removeEventListener("popstate", handlePopState);
+}, []);
+
+
   const [inquiries, setInquiries] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [ledgerUnlocked, setLedgerUnlocked] = useState(false);
@@ -807,10 +831,15 @@ export default function EwaApp() {
   }
 
   function go(v) {
-    setView(v);
-    setMenuOpen(false);
-    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
+  setViewHistory((prev) => [...prev, view]);
+  setView(v);
+  setMenuOpen(false);
+  if (typeof window !== "undefined") {
+    const url = v === "home" ? window.location.pathname : `${window.location.pathname}?view=${v}`;
+    window.history.pushState({ view: v }, "", url);
   }
+  setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
+}
   function scrollToForm() {
     go("inquire");
   }
@@ -1068,23 +1097,17 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
 
 const [viewHistory, setViewHistory] = useState([]);
 
-function go(v) {
-  setViewHistory((prev) => [...prev, view]); // remember where we're leaving from
-  setView(v);
-  setMenuOpen(false);
-  setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
-}
+
 
 function goBack() {
   setViewHistory((prev) => {
-    if (prev.length === 0) {
-      setView("home");
-      return prev;
-    }
-    const next = [...prev];
-    const last = next.pop();
+    const last = prev.length === 0 ? "home" : prev[prev.length - 1];
     setView(last);
-    return next;
+    if (typeof window !== "undefined") {
+      const url = last === "home" ? window.location.pathname : `${window.location.pathname}?view=${last}`;
+      window.history.pushState({ view: last }, "", url);
+    }
+    return prev.length === 0 ? prev : prev.slice(0, -1);
   });
   setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
 }
@@ -1416,11 +1439,12 @@ function BackButton() {
                   background: WHITE, border: `1px solid ${item.popular ? GOLD : LINE}`, borderRadius: 8,
                   padding: "14px 18px", display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap",
                   boxShadow: item.popular ? "0 4px 16px -8px rgba(169,95,107,0.25)" : "none",
+                  color: INK, WebkitAppearance: "none", appearance: "none",
                 }}
               >
                 <div style={{ flex: "1 1 260px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                    <div style={{ fontWeight: 700, fontSize: 14 }}>{item.name}</div>
+                    <div style={{ fontWeight: 700, fontSize: 14, color: INK }}>{item.name}</div>
                     {item.popular && (
                       <span className="mono" style={{ fontSize: 9, letterSpacing: "0.06em", color: GOLD_DEEP, border: `1px solid ${GOLD}`, borderRadius: 10, padding: "2px 8px" }}>
                         MOST POPULAR
