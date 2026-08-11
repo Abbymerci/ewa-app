@@ -1238,6 +1238,7 @@ function BackButton() {
           <div className="script" style={{ color: GOLD_DEEP, fontSize: 17, marginBottom: 6 }}>Where intentionality meets elegance</div>
           <a href={`tel:${CONTACT.phone.replace(/-/g, "")}`} className="mono" style={{ display: "block", color: "#8A746B", fontSize: 12, textDecoration: "none", marginBottom: 4 }}>{CONTACT.phone}</a>
           <a href={`mailto:${CONTACT.email}`} className="mono" style={{ display: "block", color: "#8A746B", fontSize: 12, textDecoration: "none" }}>{CONTACT.email}</a>
+          <a href="https://www.instagram.com/eventwithabby/" target="_blank" rel="noopener noreferrer" className="mono" style={{ display: "block", color: "#8A746B", fontSize: 12, textDecoration: "none", marginTop: 4 }}>@eventwithabby</a>
         </div>
       </div>
 
@@ -1986,12 +1987,25 @@ function BackButton() {
           )
         ) : null}
       </main>
-
       <footer style={{ borderTop: `1px solid ${LINE}`, padding: "26px 24px", textAlign: "center" }}>
         <div className="script" style={{ fontSize: 22, color: GOLD_DEEP, marginBottom: 6 }}>Where intentionality meets elegance</div>
-        <div className="mono" style={{ fontSize: 10.5, letterSpacing: "0.14em", color: "#8A746B" }}>
-          ẸWÀ · EVENTS WITH ABBY · CHARLOTTE, NC · {CONTACT.phone}
+        <div className="mono" style={{ fontSize: 10.5, letterSpacing: "0.14em", color: "#8A746B", marginBottom: 10 }}>
+          ẸWÀ · CHARLOTTE, NC · {CONTACT.phone}, {CONTACT.email}
         </div>
+        <a
+          href="https://www.instagram.com/eventwithabby/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mono"
+          style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10.5, letterSpacing: "0.1em", color: GOLD_DEEP, textDecoration: "none" }}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+          </svg>
+          @eventwithabby
+        </a>
       </footer>
     </div>
   );
