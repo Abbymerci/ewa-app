@@ -82,9 +82,6 @@ const PACKAGES = [
       { name: "Room or Hotel Surprise", now: "$250", desc: "Perfect for birthdays, anniversaries, or \"just because\" — décor, candles, and personalized accents." },
       { name: "Dinner & Intimate Experiences", now: "$300", desc: "Custom-designed tablescapes for private dinners, date nights, or celebrations." },
       { name: "Proposal Setup", now: "$350", popular: true, desc: "Personalized romantic designs with candles, flowers, balloons, and message setup." },
-     
-      
-      
     ],
   },
   {
@@ -110,7 +107,6 @@ const PACKAGES = [
       { name: "Rentals & Props", now: "On request", desc: "Luxury chairs, floral stands, or balloon frames — pricing varies by item and duration." },
     ],
   },
-  
 ];
 
 const TESTIMONIALS = [
@@ -130,15 +126,10 @@ const GALLERY = [
   { type: "image", src: SHOT4_SRC, caption: "Harvest banquet styling", tags: ["Dinners & corporate"] },
   { type: "image", src: SHOT3_SRC, caption: "Midnight surprise setup", tags: ["Birthdays", "Surprises"] },
   { type: "image", src: SHOT7_SRC, caption: "Ivory & champagne garlands", tags: ["Birthdays", "Backdrops"] },
-  // { type: "image", src: SHOT8_SRC, caption: "Monogram rose bouquet", tags: ["Flower Bouquets"] },
-  // { type: "image", src: SHOT9_SRC, caption: "Monogram rose bouquet alt", tags: ["Flower Bouquets"] },
-  // { type: "image", src: SHOT10_SRC, caption: "Monogram rose bouquet closeup", tags: ["Flower Bouquets"] },
   { type: "image", src: SHOT11_SRC, caption: "Master's Degree bouquet", tags: ["Flower Bouquets", "Surprises"] },
-  // { type: "image", src: SHOT12_SRC, caption: "Birthday bouquet car reveal alt", tags: ["Birthdays", "Surprises"] },
   { type: "image", src: SHOT13_SRC, caption: "Birthday suite luminaries", tags: ["Birthdays"] },
   { type: "image", src: SHOT14_SRC, caption: "Birthday suite dim wide", tags: ["Birthdays"] },
   { type: "image", src: SHOT15_SRC, caption: "Birthday bouquet bedside", tags: ["Birthdays"] },
-  // { type: "image", src: SHOT16_SRC, caption: "Birthday suite dim detail", tags: ["Birthdays"] },
   { type: "image", src: SHOT17_SRC, caption: "Birthday suite dim lowres", tags: ["Birthdays"] },
   { type: "image", src: SHOT18_SRC, caption: "Rhinestone butterfly bouquet", tags: ["Flower Bouquets"] },
   { type: "image", src: SHOT19_SRC, caption: "Rhinestone butterfly bouquet alt", tags: ["Flower Bouquets"] },
@@ -151,7 +142,6 @@ const GALLERY = [
   { type: "image", src: SHOT26_SRC, caption: "Engagement arch closeup", tags: ["Engagements","Backdrops"] },
   { type: "image", src: SHOT27_SRC, caption: "Engagement welcome sign", tags: ["Engagements","Backdrops"] },
   { type: "image", src: SHOT28_SRC, caption: "Engagement photo display", tags: ["Engagements","Backdrops"] },
-
 
   { type: "video", src: CLIP1_SRC, poster: POSTER1_SRC, caption: "Reveal moment", tags: ["Videos"] },
   { type: "video", src: CLIP2_SRC, poster: POSTER2_SRC, caption: "Setup walkthrough", tags: ["Videos"] },
@@ -196,7 +186,6 @@ function refCode(id) {
   return "EWA-" + id.slice(-5).toUpperCase();
 }
 
-// Supabase stores columns in snake_case; the app uses camelCase everywhere else.
 function rowToInquiry(row) {
   return {
     id: row.id,
@@ -210,10 +199,12 @@ function rowToInquiry(row) {
     services: row.services || [],
     message: row.message,
     styleLook: row.saved_look ? `${row.saved_look.shapeLabel} · ${row.saved_look.paletteLabel}` : null,
+    styleImageUrl: row.saved_look?.imageUrl || null,
     status: row.status,
     createdIso: row.created_at,
   };
 }
+
 
 function inquiryToRow(inquiry, savedLookObj) {
   return {
@@ -227,10 +218,17 @@ function inquiryToRow(inquiry, savedLookObj) {
     budget: inquiry.budget,
     services: inquiry.services,
     message: inquiry.message,
-    saved_look: savedLookObj ? { shapeLabel: savedLookObj.shapeLabel, paletteLabel: savedLookObj.paletteLabel } : null,
+    saved_look: savedLookObj
+      ? {
+          shapeLabel: savedLookObj.shapeLabel,
+          paletteLabel: savedLookObj.paletteLabel,
+          imageUrl: savedLookObj.dataUrl && savedLookObj.dataUrl.startsWith("http") ? savedLookObj.dataUrl : null,
+        }
+      : null,
     status: inquiry.status,
   };
 }
+
 function fmtDate(iso) {
   if (!iso) return "";
   const d = new Date(iso + "T00:00:00");
@@ -315,7 +313,6 @@ function generatePositions(shape, count) {
       });
     }
   } else if (shape === "tablescape") {
-    // small garland running along the table, plus two riser clusters
     const runCount = Math.floor(count * 0.6);
     for (let i = 0; i < runCount; i++) {
       const t = i / Math.max(1, runCount - 1);
@@ -373,7 +370,6 @@ function addFlowerCluster(group, p, color) {
   const center = new THREE.Mesh(new THREE.SphereGeometry(p.size * 0.4, 10, 10), centerMat);
   bloom.add(center);
 
-  // a couple of small leaves trailing off the bloom
   for (let k = 0; k < 2; k++) {
     const leaf = new THREE.Mesh(new THREE.SphereGeometry(p.size * 0.34, 6, 6), leafMat);
     leaf.position.set((k === 0 ? -1 : 1) * p.size * 0.7, -p.size * 0.6, -p.size * 0.1);
@@ -397,7 +393,6 @@ function addPersonFigure(group, x, z, tone) {
   head.position.y = 1.62;
   person.add(head);
 
-  // torso + legs approximated with a cylinder (no CapsuleGeometry in this Three.js version)
   const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.15, 0.85, 12), clothMat);
   torso.position.y = 1.05;
   person.add(torso);
@@ -411,7 +406,7 @@ function addPersonFigure(group, x, z, tone) {
   group.add(person);
 }
 
-function BalloonVisualizer({ shape, palette, count, venue, decorStyle, showPeople, onSnapshot }) {
+function BalloonVisualizer({ shape, palette, count, venue, decorStyle, showPeople, onSnapshot, onGeneratePreview, onSavePreviewToInquiry, previewLoading, previewUrl, previewRefinement, onRefinementChange }) {
   const mountRef = useRef(null);
   const stateRef = useRef({});
 
@@ -490,7 +485,6 @@ function BalloonVisualizer({ shape, palette, count, venue, decorStyle, showPeopl
     let frameId;
     function animate() {
       frameId = requestAnimationFrame(animate);
-      // orbit the camera around the scene instead of spinning the room
       const yaw = Math.max(-0.9, Math.min(0.9, rotY));
       const pitch = Math.max(-0.15, Math.min(0.45, rotX));
       camera.position.x = Math.sin(yaw) * zoom;
@@ -527,7 +521,6 @@ function BalloonVisualizer({ shape, palette, count, venue, decorStyle, showPeopl
     };
   }, []);
 
-  // Rebuild venue room whenever venue changes
   useEffect(() => {
     const { room } = stateRef.current;
     if (!room) return;
@@ -540,19 +533,16 @@ function BalloonVisualizer({ shape, palette, count, venue, decorStyle, showPeopl
     const floorMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(venue.floor), roughness: 0.85, metalness: 0.05 });
     const accentMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(venue.accent), roughness: 0.9, metalness: 0 });
 
-    // floor
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), floorMat);
     floor.rotation.x = -Math.PI / 2;
     floor.position.y = -3.2;
     floor.receiveShadow = true;
     room.add(floor);
 
-    // back wall
     const backWall = new THREE.Mesh(new THREE.PlaneGeometry(30, 16), wallMat);
     backWall.position.set(0, 4.8, -5.5);
     room.add(backWall);
 
-    // side walls (angled slightly inward so the room reads in perspective)
     const leftWall = new THREE.Mesh(new THREE.PlaneGeometry(14, 16), wallMat.clone());
     leftWall.rotation.y = Math.PI / 2;
     leftWall.position.set(-9, 4.8, 0);
@@ -562,12 +552,10 @@ function BalloonVisualizer({ shape, palette, count, venue, decorStyle, showPeopl
     rightWall.position.set(9, 4.8, 0);
     room.add(rightWall);
 
-    // baseboard strip along the back wall
     const baseboard = new THREE.Mesh(new THREE.BoxGeometry(30, 0.28, 0.06), accentMat);
     baseboard.position.set(0, -3.05, -5.45);
     room.add(baseboard);
 
-    // simple doorway frame on back wall for scale
     const frameMat = new THREE.MeshStandardMaterial({ color: new THREE.Color(venue.accent), roughness: 0.8 });
     const doorL = new THREE.Mesh(new THREE.BoxGeometry(0.18, 6.4, 0.1), frameMat);
     doorL.position.set(-6.4, 0, -5.4);
@@ -580,7 +568,6 @@ function BalloonVisualizer({ shape, palette, count, venue, decorStyle, showPeopl
     room.add(doorTop);
   }, [venue]);
 
-  // Rebuild balloons + table props whenever the design changes
   useEffect(() => {
     const { group } = stateRef.current;
     if (!group) return;
@@ -616,7 +603,6 @@ function BalloonVisualizer({ shape, palette, count, venue, decorStyle, showPeopl
     const clothMat = () => new THREE.MeshStandardMaterial({ color: 0xf7f2e8, roughness: 0.9 });
 
     if (shape === "centerpiece") {
-      // gold stand + small round table beneath
       const stand = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.1, 1.6, 12), goldMat());
       stand.position.set(0, -0.6, 0);
       group.add(stand);
@@ -629,7 +615,6 @@ function BalloonVisualizer({ shape, palette, count, venue, decorStyle, showPeopl
     }
 
     if (shape === "tablescape") {
-      // long banquet table with cloth, runner, plates and candles
       const tableTop = new THREE.Mesh(new THREE.BoxGeometry(5.4, 0.16, 1.7), clothMat());
       tableTop.position.set(0, -0.85, 0);
       group.add(tableTop);
@@ -640,7 +625,6 @@ function BalloonVisualizer({ shape, palette, count, venue, decorStyle, showPeopl
       const runner = new THREE.Mesh(new THREE.BoxGeometry(5.5, 0.02, 0.6), runnerMat);
       runner.position.set(0, -0.75, 0);
       group.add(runner);
-      // plates
       const plateMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.35, metalness: 0.1 });
       for (let i = -2; i <= 2; i++) {
         if (i === 0) continue;
@@ -650,7 +634,6 @@ function BalloonVisualizer({ shape, palette, count, venue, decorStyle, showPeopl
           group.add(plate);
         }
       }
-      // candlesticks
       for (const x of [-1.1, 0, 1.1]) {
         const candle = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.55, 10), goldMat());
         candle.position.set(x, -0.45, 0);
@@ -695,12 +678,39 @@ function BalloonVisualizer({ shape, palette, count, venue, decorStyle, showPeopl
       >
         Save this look to my inquiry
       </button>
+      <input
+        value={previewRefinement}
+        onChange={(e) => onRefinementChange(e.target.value)}
+        placeholder="Describe the full scene — e.g. 'with a table setup and guests mingling'…"
+        style={{ width: "100%", marginTop: 14, border: `1px solid ${LINE}`, borderRadius: 20, padding: "10px 16px", fontSize: 13, fontFamily: "'Manrope', sans-serif" }}
+      />
+      <button
+        onClick={onGeneratePreview}
+        disabled={previewLoading}
+        style={{
+          display: "block", margin: "10px auto 0", background: "transparent", color: GOLD_DEEP,
+          border: `1px solid ${GOLD}`, borderRadius: 30, padding: "13px 26px", fontSize: 12.5,
+          fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer",
+        }}
+      >
+        {previewLoading ? "Generating…" : previewUrl ? "✦ Generate another" : "✦ Generate realistic preview"}
+      </button>
+      {previewUrl && (
+        <div style={{ marginTop: 16 }}>
+          <img src={previewUrl} alt="AI-generated realistic preview" style={{ width: "100%", borderRadius: 8, border: `1px solid rgba(201,141,147,0.35)` }} />
+          <div className="mono" style={{ fontSize: 9.5, color: "#8A746B", marginTop: 6, letterSpacing: "0.04em", textAlign: "center" }}>
+            AI CONCEPT — FINAL LOOK MAY VARY
+          </div>
+          <button onClick={onSavePreviewToInquiry} className="cta-btn" style={{ display: "block", margin: "12px auto 0", background: GOLD, color: INK, border: "none", borderRadius: 20, padding: "9px 20px", fontSize: 11.5, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+            Use this preview in my inquiry
+          </button>
+        </div>
+      )}
     </div>
   );
 }
 
 function VideoTile({ src, poster, style }) {
-  // Real deployments have no artifact sandbox, so inline playback works normally here.
   return (
     <video
       src={src}
@@ -715,38 +725,36 @@ function VideoTile({ src, poster, style }) {
 
 export default function EwaApp() {
   const [view, setView] = useState("home");
+  const [viewHistory, setViewHistory] = useState([]);
 
-  // Private entry point: bookmark a link like yoursite.com/?owner=ledger — it's not
-  // listed anywhere in the visible menu, so clients never encounter it while browsing.
- useEffect(() => {
-  if (typeof window !== "undefined") {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("owner") === "ledger") {
-      setView("ledger");
-    } else {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("owner") === "ledger") {
+        setView("ledger");
+      } else {
+        const v = params.get("view");
+        const validViews = ["home", "concierge", "visualize", "services", "portfolio", "about", "testimonials", "inquire"];
+        if (v && validViews.includes(v)) setView(v);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    function handlePopState() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("owner") === "ledger") {
+        setView("ledger");
+        return;
+      }
       const v = params.get("view");
       const validViews = ["home", "concierge", "visualize", "services", "portfolio", "about", "testimonials", "inquire"];
-      if (v && validViews.includes(v)) setView(v);
+      setView(v && validViews.includes(v) ? v : "home");
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
     }
-  }
-}, []);
-
-useEffect(() => {
-  function handlePopState() {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("owner") === "ledger") {
-      setView("ledger");
-      return;
-    }
-    const v = params.get("view");
-    const validViews = ["home", "concierge", "visualize", "services", "portfolio", "about", "testimonials", "inquire"];
-    setView(v && validViews.includes(v) ? v : "home");
-    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
-  }
-  window.addEventListener("popstate", handlePopState);
-  return () => window.removeEventListener("popstate", handlePopState);
-}, []);
-
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
 
   const [inquiries, setInquiries] = useState([]);
   const [loaded, setLoaded] = useState(false);
@@ -769,6 +777,9 @@ useEffect(() => {
   const [vizVenueId, setVizVenueId] = useState("studio");
   const [vizCount, setVizCount] = useState(46);
   const [savedLook, setSavedLook] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewRefinement, setPreviewRefinement] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState("");
   const [chatBusy, setChatBusy] = useState(false);
@@ -831,15 +842,45 @@ useEffect(() => {
   }
 
   function go(v) {
-  setViewHistory((prev) => [...prev, view]);
-  setView(v);
-  setMenuOpen(false);
-  if (typeof window !== "undefined") {
-    const url = v === "home" ? window.location.pathname : `${window.location.pathname}?view=${v}`;
-    window.history.pushState({ view: v }, "", url);
+    setViewHistory((prev) => [...prev, view]);
+    setView(v);
+    setMenuOpen(false);
+    if (typeof window !== "undefined") {
+      const url = v === "home" ? window.location.pathname : `${window.location.pathname}?view=${v}`;
+      window.history.pushState({ view: v }, "", url);
+    }
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
   }
-  setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
-}
+
+  function goBack() {
+    setViewHistory((prev) => {
+      const last = prev.length === 0 ? "home" : prev[prev.length - 1];
+      setView(last);
+      if (typeof window !== "undefined") {
+        const url = last === "home" ? window.location.pathname : `${window.location.pathname}?view=${last}`;
+        window.history.pushState({ view: last }, "", url);
+      }
+      return prev.length === 0 ? prev : prev.slice(0, -1);
+    });
+    setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
+  }
+
+  function BackButton() {
+    if (view === "home") return null;
+    return (
+      <button
+        onClick={goBack}
+        className="ghost-btn"
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 6, background: "transparent",
+          border: "none", color: GOLD_DEEP, fontSize: 12.5, fontWeight: 600, padding: "4px 0", marginBottom: 16,
+        }}
+      >
+        ← Back
+      </button>
+    );
+  }
+
   function scrollToForm() {
     go("inquire");
   }
@@ -853,40 +894,71 @@ useEffect(() => {
     scrollToForm();
   }
 
- async function submitInquiry() {
-  if (selectedServices.length === 0) return setError("Pick at least one service.");
-  if (!form.eventDate) return setError("Add your event date.");
-  if (!form.name.trim() || !form.email.trim()) return setError("Add your name and email.");
-  if (!supabase) return setError("Storage isn't connected yet — add your Supabase keys to .env.local (see DEPLOYMENT.md).");
-  setError("");
-  const draft = {
-    id: `${Date.now()}`, // temporary, only used to compute a ref_code before Supabase assigns a real id
-    services: selectedServices.map((sid) => SERVICES.find((s) => s.id === sid).label),
-    ...form,
-    guestCount: form.guestCount.trim(),
-    status: "New",
-  };
-  const row = inquiryToRow(draft, savedLook);
-  const { data, error } = await supabase.from("inquiries").insert(row).select().single();
-  if (error) {
-    setError("Could not submit — please try again in a moment.");
-    return;
+  async function generateRealisticPreview() {
+    setPreviewLoading(true);
+    setPreviewUrl(null);
+    try {
+      const res = await fetch("/api/generate-preview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          shapeLabel: SHAPES.find((s) => s.id === vizShape).label,
+          colors: vizPalette.colors,
+          venueId: vizVenueId,
+          packageName: null,
+          refinement: previewRefinement,
+        }),
+      });
+      const data = await res.json();
+      if (data.imageUrl) setPreviewUrl(data.imageUrl);
+    } catch (e) {
+      // fail silently — nice-to-have, not core functionality
+    }
+    setPreviewLoading(false);
   }
-  const inquiry = rowToInquiry(data);
-  setInquiries((prev) => [...prev, inquiry].sort((a, b) => a.eventDate.localeCompare(b.eventDate)));
 
-  // Notify Abby — fire and forget, never blocks the client's confirmation
-  fetch("/api/notify-inquiry", {
+  function saveGeneratedPreviewToInquiry() {
+    const note = `Realistic AI preview generated: ${SHAPES.find((s) => s.id === vizShape).label} in ${vizPalette.label}${previewRefinement ? ` — ${previewRefinement}` : ""}.`;
+    setForm((f) => ({ ...f, message: f.message ? `${f.message}\n${note}` : note }));
+    setSavedLook({ shapeLabel: SHAPES.find((s) => s.id === vizShape).label, paletteLabel: vizPalette.label, dataUrl: previewUrl });
+    scrollToForm();
+  }
+
+  async function submitInquiry() {
+    if (selectedServices.length === 0) return setError("Pick at least one service.");
+    if (!form.eventDate) return setError("Add your event date.");
+    if (!form.name.trim() || !form.email.trim()) return setError("Add your name and email.");
+    if (!supabase) return setError("Storage isn't connected yet — add your Supabase keys to .env.local (see DEPLOYMENT.md).");
+    setError("");
+    const draft = {
+      id: `${Date.now()}`,
+      services: selectedServices.map((sid) => SERVICES.find((s) => s.id === sid).label),
+      ...form,
+      guestCount: form.guestCount.trim(),
+      status: "New",
+    };
+    const row = inquiryToRow(draft, savedLook);
+    const { data, error } = await supabase.from("inquiries").insert(row).select().single();
+    if (error) {
+      setError("Could not submit — please try again in a moment.");
+      return;
+    }
+    const inquiry = rowToInquiry(data);
+    setInquiries((prev) => [...prev, inquiry].sort((a, b) => a.eventDate.localeCompare(b.eventDate)));
+
+    fetch("/api/notify-inquiry", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(draft),
-  }).catch(() => {}); // if the email fails, the inquiry is still safely saved in Supabase
+    body: JSON.stringify({ ...draft, savedLook }),
+  }).catch(() => {});
 
-  setConfirmed(inquiry);
-  setSelectedServices([]);
-  setSavedLook(null);
-  setForm({ eventDate: "", eventType: EVENT_TYPES[0], guestCount: "", budget: BUDGETS[0], name: "", email: "", phone: "", message: "" });
-}
+    setConfirmed(inquiry);
+    setSelectedServices([]);
+    setSavedLook(null);
+    setPreviewUrl(null);
+    setPreviewRefinement("");
+    setForm({ eventDate: "", eventType: EVENT_TYPES[0], guestCount: "", budget: BUDGETS[0], name: "", email: "", phone: "", message: "" });
+  }
 
   async function cycleStatus(id) {
     if (!supabase) return;
@@ -912,7 +984,6 @@ useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatMessages, chatBusy]);
 
-  // Local fallback stylist — keyword-based, used when the AI service is unreachable
   function localConcierge(text) {
     const t = text.toLowerCase();
     const COLOR_MAP = [
@@ -958,46 +1029,44 @@ useEffect(() => {
     };
   }
 
-async function callConciergeAPI(prompt) {
-  
-  const response = await fetch("/api/concierge", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt }),
-  });
-  // Read as text first — some environments return non-JSON error bodies
-  const bodyText = await response.text();
-  let data;
-  try {
-    data = JSON.parse(bodyText);
-  } catch {
-    throw new Error(`Bad response (${response.status})`);
-  }
-  if (!response.ok || data.error) {
-    throw new Error(data?.error?.message || `Request failed (${response.status})`);
-  }
-  const raw = (data.content || [])
-    .filter((c) => c.type === "text")
-    .map((c) => c.text || "")
-    .join("")
-    .replace(/```json|```/g, "")
-    .trim();
-  let parsed = null;
-  try {
-    parsed = JSON.parse(raw);
-  } catch {
-    const start = raw.indexOf("{");
-    const end = raw.lastIndexOf("}");
-    if (start !== -1 && end > start) {
-      try { parsed = JSON.parse(raw.slice(start, end + 1)); } catch { parsed = null; }
+  async function callConciergeAPI(prompt) {
+    const response = await fetch("/api/concierge", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
+    });
+    const bodyText = await response.text();
+    let data;
+    try {
+      data = JSON.parse(bodyText);
+    } catch {
+      throw new Error(`Bad response (${response.status})`);
     }
+    if (!response.ok || data.error) {
+      throw new Error(data?.error?.message || `Request failed (${response.status})`);
+    }
+    const raw = (data.content || [])
+      .filter((c) => c.type === "text")
+      .map((c) => c.text || "")
+      .join("")
+      .replace(/```json|```/g, "")
+      .trim();
+    let parsed = null;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      const start = raw.indexOf("{");
+      const end = raw.lastIndexOf("}");
+      if (start !== -1 && end > start) {
+        try { parsed = JSON.parse(raw.slice(start, end + 1)); } catch { parsed = null; }
+      }
+    }
+    if (!parsed || typeof parsed.reply !== "string") {
+      if (raw) return { reply: raw, suggestion: null };
+      throw new Error("Empty response");
+    }
+    return parsed;
   }
-  if (!parsed || typeof parsed.reply !== "string") {
-    if (raw) return { reply: raw, suggestion: null };
-    throw new Error("Empty response");
-  }
-  return parsed;
-}
 
   async function sendChat() {
     const text = chatInput.trim();
@@ -1014,7 +1083,7 @@ Abby's direct contact: phone ${contact.phone}, email ${contact.email}. If a clie
 
 Services & starting prices (currently discounted): Luxury decor — Standard $350, Deluxe $700, Premium $1,200 (add-ons: name signage, neon lights, flower walls). Event planning — Classic $300, Premium $900, Corporate $600. Romantic & surprise — Proposal setup $350, Room/hotel surprise $250, Dinner & intimate tablescapes $300. Gifting — Flower bouquet $50, Money bouquet/box $80, Gift wrapping $50. Custom event concept consultation $100. All bookings require a consultation for a tailored quote.
 
-A client is describing their dream event. Respond warmly and briefly (2-4 sentences), like a boutique stylist — elegant but not stuffy. Then recommend ONE design.
+A client is describing their dream event. Respond warmly and briefly (2-4 sentences), like a boutique stylist — elegant but not stuffy. Then recommend ONE design. Mention once, naturally, that after picking a design they can describe a full scene (like "with a table setup" or "add guests mingling") to generate a realistic AI preview image of the whole thing.
 
 Available shapes (use the exact id): garlandArch (doorway arch), circleFrame (circle backdrop), ceilingCloud (ceiling garland), centerpiece (table cluster), tablescape (full tablescape with plates & candles).
 Available venue ids: studio, banquet, home, noir (evening/moody).
@@ -1029,7 +1098,6 @@ Respond ONLY with valid JSON, no markdown fences, in exactly this format:
 If the client hasn't given enough detail yet (no occasion or vibe at all), set "suggestion" to null and use "reply" to ask one warm clarifying question.`;
 
     let parsed = null;
-    // Try the AI service twice, then fall back to the built-in stylist
     for (let attempt = 0; attempt < 2 && !parsed; attempt++) {
       try {
         parsed = await callConciergeAPI(prompt);
@@ -1042,7 +1110,6 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
       parsed = localConcierge(history.filter((m) => m.role === "user").map((m) => m.text).join(" "));
     }
 
-    // Validate the suggestion so a malformed one can't break the card render
     let suggestion = parsed.suggestion || null;
     if (suggestion) {
       const validShape = SHAPES.some((sh) => sh.id === suggestion.shapeId);
@@ -1083,6 +1150,24 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
     scrollToForm();
   }
 
+  function selectServiceAndInquire(categoryName, item) {
+    const categoryServiceMap = {
+      "Event Planning & Coordination": "planning",
+      "Luxury Décor & Styling": "decor",
+      "Romantic & Surprise Experiences": "romantic",
+      "Gifting & Presentation": "gifting",
+      "Custom Experiences": "custom",
+    };
+    const serviceId = categoryServiceMap[categoryName];
+    if (serviceId && !selectedServices.includes(serviceId)) {
+      setSelectedServices((prev) => [...prev, serviceId]);
+    }
+    const priceLabel = item.now === "On request" ? item.now : `from ${item.now}`;
+    const note = `Interested in: ${item.name} (${priceLabel})`;
+    setForm((f) => ({ ...f, message: f.message ? `${f.message}\n${note}` : note }));
+    scrollToForm();
+  }
+
   const upcoming = useMemo(
     () => inquiries.filter((i) => i.eventDate >= todayIso()).sort((a, b) => a.eventDate.localeCompare(b.eventDate)),
     [inquiries]
@@ -1093,59 +1178,6 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
     fontFamily: "'Manrope', sans-serif", background: "transparent", color: INK, width: "100%",
   };
   const labelStyle = { fontSize: 11, fontWeight: 700, color: GOLD_DEEP, marginBottom: 8, display: "block", letterSpacing: "0.14em", textTransform: "uppercase" };
-
-
-const [viewHistory, setViewHistory] = useState([]);
-
-
-
-function goBack() {
-  setViewHistory((prev) => {
-    const last = prev.length === 0 ? "home" : prev[prev.length - 1];
-    setView(last);
-    if (typeof window !== "undefined") {
-      const url = last === "home" ? window.location.pathname : `${window.location.pathname}?view=${last}`;
-      window.history.pushState({ view: last }, "", url);
-    }
-    return prev.length === 0 ? prev : prev.slice(0, -1);
-  });
-  setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
-}
-
-
-function BackButton() {
-  if (view === "home") return null;
-  return (
-    <button
-      onClick={goBack}
-      className="ghost-btn"
-      style={{
-        display: "inline-flex", alignItems: "center", gap: 6, background: "transparent",
-        border: "none", color: GOLD_DEEP, fontSize: 12.5, fontWeight: 600, padding: "4px 0", marginBottom: 16,
-      }}
-    >
-      ← Back
-    </button>
-  );
-}
-
-  function selectServiceAndInquire(categoryName, item) {
-  const categoryServiceMap = {
-    "Event Planning & Coordination": "planning",
-    "Luxury Décor & Styling": "decor",
-    "Romantic & Surprise Experiences": "romantic",
-    "Gifting & Presentation": "gifting",
-    "Custom Experiences": "custom",
-  };
-  const serviceId = categoryServiceMap[categoryName];
-  if (serviceId && !selectedServices.includes(serviceId)) {
-    setSelectedServices((prev) => [...prev, serviceId]);
-  }
-  const priceLabel = item.now === "On request" ? item.now : `from ${item.now}`;
-  const note = `Interested in: ${item.name} (${priceLabel})`;
-  setForm((f) => ({ ...f, message: f.message ? `${f.message}\n${note}` : note }));
-  scrollToForm();
-}
 
   return (
     <div style={{ minHeight: "100vh", background: PAPER, fontFamily: "'Manrope', sans-serif", color: INK }}>
@@ -1182,7 +1214,6 @@ function BackButton() {
       `,
         }}
       />
-
 
       {/* NAV */}
       <div style={{ position: "sticky", top: 0, zIndex: 30, background: "rgba(255,255,255,0.92)", backdropFilter: "blur(6px)", borderBottom: `1px solid ${LINE}` }}>
@@ -1341,9 +1372,6 @@ function BackButton() {
               ))}
             </div>
           </div>
-
-          {/* CONTACT STRIP */}
-         
         </>
       )}
 
@@ -1414,68 +1442,68 @@ function BackButton() {
         </div>
       )}
 
-     {view === "services" && (
-  <div style={{ background: PAPER, padding: "48px 24px 40px" }}>
-    <div style={{ maxWidth: 760, margin: "0 auto" }}>
-      <BackButton />
-      <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.22em", textAlign: "center", marginBottom: 8 }}>SERVICES &amp; PRICING</div>
-      <h2 className="display" style={{ fontSize: 32, textAlign: "center", marginBottom: 8 }}>The Ẹwà menu</h2>
-      <p style={{ fontSize: 13, color: "#8A746B", textAlign: "center", marginBottom: 32, maxWidth: 440, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
-        Prices vary by event size, location, materials, and customization — every booking begins with a consultation to finalize your tailored quote.
-      </p>
-      {PACKAGES.map((cat) => (
-        <div key={cat.category} style={{ marginBottom: 28 }}>
-          <div className="mono" style={{ fontSize: 11, letterSpacing: "0.14em", color: GOLD_DEEP, marginBottom: 12, textTransform: "uppercase" }}>
-            {cat.category}
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {cat.items.map((item) => (
-              <button
-                key={item.name}
-                onClick={() => selectServiceAndInquire(cat.category, item)}
-                className="svc-card"
-                style={{
-                  textAlign: "left", width: "100%", cursor: "pointer",
-                  background: WHITE, border: `1px solid ${item.popular ? GOLD : LINE}`, borderRadius: 8,
-                  padding: "14px 18px", display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap",
-                  boxShadow: item.popular ? "0 4px 16px -8px rgba(169,95,107,0.25)" : "none",
-                  color: INK, WebkitAppearance: "none", appearance: "none",
-                }}
-              >
-                <div style={{ flex: "1 1 260px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                    <div style={{ fontWeight: 700, fontSize: 14, color: INK }}>{item.name}</div>
-                    {item.popular && (
-                      <span className="mono" style={{ fontSize: 9, letterSpacing: "0.06em", color: GOLD_DEEP, border: `1px solid ${GOLD}`, borderRadius: 10, padding: "2px 8px" }}>
-                        MOST POPULAR
-                      </span>
-                    )}
-                  </div>
-                  <div style={{ fontSize: 12.5, color: "#8A746B", marginTop: 4, lineHeight: 1.55 }}>{item.desc}</div>
+      {view === "services" && (
+        <div style={{ background: PAPER, padding: "48px 24px 40px" }}>
+          <div style={{ maxWidth: 760, margin: "0 auto" }}>
+            <BackButton />
+            <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.22em", textAlign: "center", marginBottom: 8 }}>SERVICES &amp; PRICING</div>
+            <h2 className="display" style={{ fontSize: 32, textAlign: "center", marginBottom: 8 }}>The Ẹwà menu</h2>
+            <p style={{ fontSize: 13, color: "#8A746B", textAlign: "center", marginBottom: 32, maxWidth: 440, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
+              Prices vary by event size, location, materials, and customization — every booking begins with a consultation to finalize your tailored quote.
+            </p>
+            {PACKAGES.map((cat) => (
+              <div key={cat.category} style={{ marginBottom: 28 }}>
+                <div className="mono" style={{ fontSize: 11, letterSpacing: "0.14em", color: GOLD_DEEP, marginBottom: 12, textTransform: "uppercase" }}>
+                  {cat.category}
                 </div>
-                <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
-                  <span className="mono" style={{ fontSize: 15, fontWeight: 700, color: GOLD_DEEP }}>
-                    {item.now === "On request" ? item.now : `from ${item.now}`}
-                  </span>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {cat.items.map((item) => (
+                    <button
+                      key={item.name}
+                      onClick={() => selectServiceAndInquire(cat.category, item)}
+                      className="svc-card"
+                      style={{
+                        textAlign: "left", width: "100%", cursor: "pointer",
+                        background: WHITE, border: `1px solid ${item.popular ? GOLD : LINE}`, borderRadius: 8,
+                        padding: "14px 18px", display: "flex", justifyContent: "space-between", gap: 14, flexWrap: "wrap",
+                        boxShadow: item.popular ? "0 4px 16px -8px rgba(169,95,107,0.25)" : "none",
+                        color: INK, WebkitAppearance: "none", appearance: "none",
+                      }}
+                    >
+                      <div style={{ flex: "1 1 260px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                          <div style={{ fontWeight: 700, fontSize: 14, color: INK }}>{item.name}</div>
+                          {item.popular && (
+                            <span className="mono" style={{ fontSize: 9, letterSpacing: "0.06em", color: GOLD_DEEP, border: `1px solid ${GOLD}`, borderRadius: 10, padding: "2px 8px" }}>
+                              MOST POPULAR
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ fontSize: 12.5, color: "#8A746B", marginTop: 4, lineHeight: 1.55 }}>{item.desc}</div>
+                      </div>
+                      <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
+                        <span className="mono" style={{ fontSize: 15, fontWeight: 700, color: GOLD_DEEP }}>
+                          {item.now === "On request" ? item.now : `from ${item.now}`}
+                        </span>
+                      </div>
+                    </button>
+                  ))}
                 </div>
-              </button>
+              </div>
             ))}
+            <div style={{ textAlign: "center", marginTop: 8 }}>
+              <button className="cta-btn" onClick={() => go("inquire")} style={{ background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "14px 28px", fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                Begin your inquiry
+              </button>
+            </div>
           </div>
         </div>
-      ))}
-      <div style={{ textAlign: "center", marginTop: 8 }}>
-        <button className="cta-btn" onClick={() => go("inquire")} style={{ background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "14px 28px", fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-          Begin your inquiry
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
       {view === "about" && (
         <div style={{ background: PAPER, padding: "48px 24px 56px" }}>
           <div style={{ maxWidth: 680, margin: "0 auto" }}>
-          <BackButton />
+            <BackButton />
             <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.22em", textAlign: "center", marginBottom: 8 }}>OUR STORY</div>
             <h2 className="display" style={{ fontSize: 32, textAlign: "center", marginBottom: 6 }}>About Ẹwà</h2>
             <div className="script" style={{ fontSize: 22, color: GOLD_DEEP, textAlign: "center", marginBottom: 28 }}>Where intentionality meets elegance</div>
@@ -1552,7 +1580,6 @@ function BackButton() {
           </div>
         </div>
       )}
-
 
       {/* MAIN */}
       <main style={{ maxWidth: 720, margin: "0 auto", padding: ["ledger", "visualize", "concierge", "inquire"].includes(view) ? "48px 24px 80px" : "0" }}>
@@ -1783,7 +1810,21 @@ function BackButton() {
                 This is a 3D style preview, not a photo-real render — figures are simplified silhouettes to help judge scale.
               </p>
 
-              <BalloonVisualizer shape={vizShape} palette={vizPalette.colors} count={vizCount} venue={vizVenue} decorStyle={vizDecorStyle} showPeople={vizShowPeople} onSnapshot={handleSaveLook} />
+              <BalloonVisualizer
+                shape={vizShape}
+                palette={vizPalette.colors}
+                count={vizCount}
+                venue={vizVenue}
+                decorStyle={vizDecorStyle}
+                showPeople={vizShowPeople}
+                onSnapshot={handleSaveLook}
+                onGeneratePreview={generateRealisticPreview}
+                onSavePreviewToInquiry={saveGeneratedPreviewToInquiry}
+                previewLoading={previewLoading}
+                previewUrl={previewUrl}
+                previewRefinement={previewRefinement}
+                onRefinementChange={setPreviewRefinement}
+              />
             </div>
           </div>
         ) : view === "ledger" ? (
@@ -1838,10 +1879,13 @@ function BackButton() {
                           {fmtDate(inq.eventDate)} · {inq.guestCount ? `${inq.guestCount} guests · ` : ""}{inq.budget}
                         </div>
                         <div style={{ fontSize: 12, color: "#8A746B", marginTop: 4 }}>{inq.email}{inq.phone ? ` · ${inq.phone}` : ""}</div>
-                        {inq.styleLook && (
+                       {inq.styleLook && (
                           <div className="mono" style={{ fontSize: 11, color: GOLD_DEEP, marginTop: 6, letterSpacing: "0.04em" }}>
                             ✦ VISUALIZED: {inq.styleLook}
                           </div>
+                        )}
+                        {inq.styleImageUrl && (
+                          <img src={inq.styleImageUrl} alt="Client's AI-generated preview" style={{ width: 160, borderRadius: 6, marginTop: 8, border: `1px solid ${LINE}` }} />
                         )}
                         {inq.message && <div style={{ fontSize: 13, marginTop: 10, color: INK, lineHeight: 1.5, fontStyle: "italic", whiteSpace: "pre-line" }}>"{inq.message}"</div>}
                       </div>
@@ -1872,161 +1916,160 @@ function BackButton() {
           </div>
         ) : view === "inquire" ? (
           confirmed ? (
-            
-          <div style={{ background: WHITE, border: `1px solid ${LINE}`, borderRadius: 4, padding: "48px 36px", textAlign: "center", marginTop: 56, boxShadow: "0 20px 50px -20px rgba(28,20,16,0.15)" }}>
-          <div style={{ textAlign: "left" }}>
-            <BackButton />
-          </div>
-            <div style={{
-              width: 76, height: 76, borderRadius: "50%", border: `2px solid ${GOLD}`, margin: "0 auto 18px",
-              display: "flex", alignItems: "center", justifyContent: "center", position: "relative",
-            }}>
-              <div style={{ position: "absolute", inset: 5, borderRadius: "50%", border: `1px solid ${GOLD}`, opacity: 0.5 }} />
-              <span className="display" style={{ fontSize: 26, color: GOLD_DEEP }}>Ẹ</span>
-            </div>
-            <div className="mono" style={{ fontSize: 11, letterSpacing: "0.16em", color: GOLD_DEEP, marginBottom: 12 }}>
-              INQUIRY RECEIVED · {refCode(confirmed.id)}
-            </div>
-            <h2 className="display" style={{ margin: "0 0 14px", fontSize: 30 }}>Thank you, {confirmed.name.split(" ")[0]}</h2>
-            <Ornament />
-            <p style={{ margin: "0 0 6px", fontSize: 14, color: "#8A746B" }}>{confirmed.services.join(", ")}</p>
-            <p className="mono" style={{ margin: "0 0 22px", fontSize: 14 }}>{fmtDate(confirmed.eventDate)}</p>
-            <p style={{ fontSize: 13, color: "#8A746B", marginBottom: 28, lineHeight: 1.7, maxWidth: 380, marginLeft: "auto", marginRight: "auto" }}>
-              Abby will follow up at {confirmed.email} with availability and a tailored quote for your event.
-            </p>
-            <button
-              className="cta-btn"
-              onClick={() => setConfirmed(null)}
-              style={{ background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "13px 26px", fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}
-            >
-              Submit another inquiry
-            </button>
-          </div>
-        ) : (
-          <div ref={formRef}>
-            <BackButton />
-            <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.18em", marginBottom: 8, textAlign: "center" }}>REQUEST A CONSULTATION</div>
-            <h2 className="display" style={{ fontSize: 34, textAlign: "center", marginBottom: 10 }}>Tell us about your event</h2>
-            <p style={{ fontSize: 14, color: "#8A746B", marginBottom: 36, textAlign: "center", maxWidth: 420, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
-              No booking fee to inquire — Abby will follow up personally with availability and pricing.
-            </p>
-
-            <div style={{ background: WHITE, border: `1px solid ${LINE}`, borderRadius: 4, padding: "36px 32px", boxShadow: "0 24px 60px -30px rgba(28,20,16,0.18)" }}>
-              {savedLook && (
-                <div style={{ display: "flex", alignItems: "center", gap: 12, background: "#FBF3E1", border: `1px solid ${GOLD}`, borderRadius: 6, padding: "10px 14px", marginBottom: 24 }}>
-                  {savedLook.dataUrl && <img src={savedLook.dataUrl} alt="Saved style preview" style={{ width: 46, height: 46, objectFit: "cover", borderRadius: 4 }} />}
-                  <div className="mono" style={{ fontSize: 11, color: GOLD_DEEP, letterSpacing: "0.04em" }}>
-                    STYLE ATTACHED — {savedLook.shapeLabel} · {savedLook.paletteLabel}
-                  </div>
-                </div>
-              )}
-
-              <label style={labelStyle}>What do you need</label>
-              <div className="svc-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 28 }}>
-                {SERVICES.map((s) => {
-                  const active = selectedServices.includes(s.id);
-                  return (
-                    <button
-                      key={s.id}
-                      className="svc-card"
-                      onClick={() => toggleService(s.id)}
-                      style={{
-                        textAlign: "left", border: `1px solid ${active ? GOLD : LINE}`, background: active ? "#FBF3E1" : WHITE,
-                        borderRadius: 6, padding: "14px 16px", fontSize: 13.5, fontWeight: 500,
-                      }}
-                    >
-                      <span style={{ color: active ? GOLD_DEEP : INK }}>{active ? "✓ " : ""}{s.label}</span>
-                    </button>
-                  );
-                })}
+            <div style={{ background: WHITE, border: `1px solid ${LINE}`, borderRadius: 4, padding: "48px 36px", textAlign: "center", marginTop: 56, boxShadow: "0 20px 50px -20px rgba(28,20,16,0.15)" }}>
+              <div style={{ textAlign: "left" }}>
+                <BackButton />
               </div>
-
-              <div className="two-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22, marginBottom: 22 }}>
-                <div>
-                  <label style={labelStyle}>Event date</label>
-                  <input type="date" min={todayIso()} value={form.eventDate} onChange={(e) => setForm({ ...form, eventDate: e.target.value })} style={inputStyle} />
-                </div>
-                <div>
-                  <label style={labelStyle}>Event type</label>
-                  <select value={form.eventType} onChange={(e) => setForm({ ...form, eventType: e.target.value })} style={inputStyle}>
-                    {EVENT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </div>
+              <div style={{
+                width: 76, height: 76, borderRadius: "50%", border: `2px solid ${GOLD}`, margin: "0 auto 18px",
+                display: "flex", alignItems: "center", justifyContent: "center", position: "relative",
+              }}>
+                <div style={{ position: "absolute", inset: 5, borderRadius: "50%", border: `1px solid ${GOLD}`, opacity: 0.5 }} />
+                <span className="display" style={{ fontSize: 26, color: GOLD_DEEP }}>Ẹ</span>
               </div>
-
-              <div className="two-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22, marginBottom: 22 }}>
-                <div>
-                  <label style={labelStyle}>Estimated guests</label>
-                  <input placeholder="e.g. 30" value={form.guestCount} onChange={(e) => setForm({ ...form, guestCount: e.target.value })} style={inputStyle} />
-                </div>
-                <div>
-                  <label style={labelStyle}>Budget range</label>
-                  <select value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} style={inputStyle}>
-                    {BUDGETS.map((b) => <option key={b} value={b}>{b}</option>)}
-                  </select>
-                </div>
+              <div className="mono" style={{ fontSize: 11, letterSpacing: "0.16em", color: GOLD_DEEP, marginBottom: 12 }}>
+                INQUIRY RECEIVED · {refCode(confirmed.id)}
               </div>
-
-              <div className="two-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22, marginBottom: 22 }}>
-                <div>
-                  <label style={labelStyle}>Your name</label>
-                  <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} style={inputStyle} />
-                </div>
-                <div>
-                  <label style={labelStyle}>Phone</label>
-                  <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} style={inputStyle} />
-                </div>
-              </div>
-
-              <label style={labelStyle}>Email</label>
-              <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={{ ...inputStyle, marginBottom: 22 }} />
-
-              <label style={labelStyle}>Your vision (optional)</label>
-              <textarea
-                rows={3}
-                placeholder="Colors, theme, venue, anything you're picturing…"
-                value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                style={{ ...inputStyle, marginBottom: 26, resize: "vertical", borderBottom: `1.5px solid ${LINE}` }}
-              />
-
-              {error && <div style={{ color: BLUSH, fontSize: 13, marginBottom: 18 }}>{error}</div>}
-
+              <h2 className="display" style={{ margin: "0 0 14px", fontSize: 30 }}>Thank you, {confirmed.name.split(" ")[0]}</h2>
+              <Ornament />
+              <p style={{ margin: "0 0 6px", fontSize: 14, color: "#8A746B" }}>{confirmed.services.join(", ")}</p>
+              <p className="mono" style={{ margin: "0 0 22px", fontSize: 14 }}>{fmtDate(confirmed.eventDate)}</p>
+              <p style={{ fontSize: 13, color: "#8A746B", marginBottom: 28, lineHeight: 1.7, maxWidth: 380, marginLeft: "auto", marginRight: "auto" }}>
+                Abby will follow up at {confirmed.email} with availability and a tailored quote for your event.
+              </p>
               <button
                 className="cta-btn"
-                onClick={submitInquiry}
-                style={{ background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "15px 24px", fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", width: "100%" }}
+                onClick={() => setConfirmed(null)}
+                style={{ background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "13px 26px", fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}
               >
-                Send inquiry
+                Submit another inquiry
               </button>
             </div>
-          </div>
+          ) : (
+            <div ref={formRef}>
+              <BackButton />
+              <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.18em", marginBottom: 8, textAlign: "center" }}>REQUEST A CONSULTATION</div>
+              <h2 className="display" style={{ fontSize: 34, textAlign: "center", marginBottom: 10 }}>Tell us about your event</h2>
+              <p style={{ fontSize: 14, color: "#8A746B", marginBottom: 36, textAlign: "center", maxWidth: 420, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
+                No booking fee to inquire — Abby will follow up personally with availability and pricing.
+              </p>
+
+              <div style={{ background: WHITE, border: `1px solid ${LINE}`, borderRadius: 4, padding: "36px 32px", boxShadow: "0 24px 60px -30px rgba(28,20,16,0.18)" }}>
+                {savedLook && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, background: "#FBF3E1", border: `1px solid ${GOLD}`, borderRadius: 6, padding: "10px 14px", marginBottom: 24 }}>
+                    {savedLook.dataUrl && <img src={savedLook.dataUrl} alt="Saved style preview" style={{ width: 46, height: 46, objectFit: "cover", borderRadius: 4 }} />}
+                    <div className="mono" style={{ fontSize: 11, color: GOLD_DEEP, letterSpacing: "0.04em" }}>
+                      STYLE ATTACHED — {savedLook.shapeLabel} · {savedLook.paletteLabel}
+                    </div>
+                  </div>
+                )}
+
+                <label style={labelStyle}>What do you need</label>
+                <div className="svc-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 28 }}>
+                  {SERVICES.map((s) => {
+                    const active = selectedServices.includes(s.id);
+                    return (
+                      <button
+                        key={s.id}
+                        className="svc-card"
+                        onClick={() => toggleService(s.id)}
+                        style={{
+                          textAlign: "left", border: `1px solid ${active ? GOLD : LINE}`, background: active ? "#FBF3E1" : WHITE,
+                          borderRadius: 6, padding: "14px 16px", fontSize: 13.5, fontWeight: 500,
+                        }}
+                      >
+                        <span style={{ color: active ? GOLD_DEEP : INK }}>{active ? "✓ " : ""}{s.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="two-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22, marginBottom: 22 }}>
+                  <div>
+                    <label style={labelStyle}>Event date</label>
+                    <input type="date" min={todayIso()} value={form.eventDate} onChange={(e) => setForm({ ...form, eventDate: e.target.value })} style={inputStyle} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Event type</label>
+                    <select value={form.eventType} onChange={(e) => setForm({ ...form, eventType: e.target.value })} style={inputStyle}>
+                      {EVENT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="two-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22, marginBottom: 22 }}>
+                  <div>
+                    <label style={labelStyle}>Estimated guests</label>
+                    <input placeholder="e.g. 30" value={form.guestCount} onChange={(e) => setForm({ ...form, guestCount: e.target.value })} style={inputStyle} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Budget range</label>
+                    <select value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} style={inputStyle}>
+                      {BUDGETS.map((b) => <option key={b} value={b}>{b}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="two-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22, marginBottom: 22 }}>
+                  <div>
+                    <label style={labelStyle}>Your name</label>
+                    <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} style={inputStyle} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Phone</label>
+                    <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} style={inputStyle} />
+                  </div>
+                </div>
+
+                <label style={labelStyle}>Email</label>
+                <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={{ ...inputStyle, marginBottom: 22 }} />
+
+                <label style={labelStyle}>Your vision (optional)</label>
+                <textarea
+                  rows={3}
+                  placeholder="Colors, theme, venue, anything you're picturing…"
+                  value={form.message}
+                  onChange={(e) => setForm({ ...form, message: e.target.value })}
+                  style={{ ...inputStyle, marginBottom: 26, resize: "vertical", borderBottom: `1.5px solid ${LINE}` }}
+                />
+
+                {error && <div style={{ color: BLUSH, fontSize: 13, marginBottom: 18 }}>{error}</div>}
+
+                <button
+                  className="cta-btn"
+                  onClick={submitInquiry}
+                  style={{ background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "15px 24px", fontSize: 13, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", width: "100%" }}
+                >
+                  Send inquiry
+                </button>
+              </div>
+            </div>
           )
         ) : null}
       </main>
       <footer style={{ borderTop: `1px solid ${LINE}`, padding: "26px 24px", textAlign: "center" }}>
-  <div className="script" style={{ fontSize: 22, color: GOLD_DEEP, marginBottom: 6 }}>Where intentionality meets elegance</div>
-  <div className="mono" style={{ fontSize: 10.5, letterSpacing: "0.14em", color: "#8A746B", marginBottom: 10 }}>
-    ẸWÀ · CHARLOTTE, NC ·{" "}
-    <a href={`tel:${CONTACT.phone.replace(/-/g, "")}`} style={{ color: "#8A746B", textDecoration: "underline" }}>{CONTACT.phone}</a>
-    {", "}
-    <a href={`mailto:${CONTACT.email}`} style={{ color: "#8A746B", textDecoration: "underline" }}>{CONTACT.email}</a>
-  </div>
-  <a
-    href="https://www.instagram.com/eventwithabby/"
-    target="_blank"
-    rel="noopener noreferrer"
-    className="mono"
-    style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10.5, letterSpacing: "0.1em", color: GOLD_DEEP, textDecoration: "none" }}
-  >
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <rect x="2" y="2" width="20" height="20" rx="5" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-    </svg>
-    @eventwithabby
-  </a>
-</footer>
+        <div className="script" style={{ fontSize: 22, color: GOLD_DEEP, marginBottom: 6 }}>Where intentionality meets elegance</div>
+        <div className="mono" style={{ fontSize: 10.5, letterSpacing: "0.14em", color: "#8A746B", marginBottom: 10 }}>
+          ẸWÀ · CHARLOTTE, NC ·{" "}
+          <a href={`tel:${CONTACT.phone.replace(/-/g, "")}`} style={{ color: "#8A746B", textDecoration: "underline" }}>{CONTACT.phone}</a>
+          {", "}
+          <a href={`mailto:${CONTACT.email}`} style={{ color: "#8A746B", textDecoration: "underline" }}>{CONTACT.email}</a>
+        </div>
+        <a
+          href="https://www.instagram.com/eventwithabby/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mono"
+          style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10.5, letterSpacing: "0.1em", color: GOLD_DEEP, textDecoration: "none" }}
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+          </svg>
+          @eventwithabby
+        </a>
+      </footer>
     </div>
   );
 }
