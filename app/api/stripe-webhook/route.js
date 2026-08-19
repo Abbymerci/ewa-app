@@ -57,6 +57,7 @@ export async function POST(req) {
               body: JSON.stringify({
                 from: "Ẹwà <notifications@eventwithabby.com>",
                 to: [session.customer_details.email],
+                cc: ["eventwithabby@gmail.com"],
                 subject: `✔️ Payment received — ${payment.label}`,
                 html: `
                   <div style="font-family: 'Georgia', serif; background:#FCF2ED; padding: 32px 16px; margin:0;">
