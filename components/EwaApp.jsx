@@ -760,6 +760,7 @@ export default function EwaApp() {
   const [inquiries, setInquiries] = useState([]);
   const [loaded, setLoaded] = useState(false);
   const [payments, setPayments] = useState([]);
+  const [paymentConfirmation, setPaymentConfirmation] = useState(null);
   const [ledgerUnlocked, setLedgerUnlocked] = useState(false);
   const [ledgerPasswordInput, setLedgerPasswordInput] = useState("");
   const [ledgerError, setLedgerError] = useState("");
@@ -815,6 +816,77 @@ export default function EwaApp() {
       setLedgerUnlocked(true);
     }
   }, []);
+
+
+  useEffect(() => {
+  (async () => {
+    if (typeof window === "undefined" || !supabase) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("payment") !== "success") return;
+    const sessionId = params.get("session_id");
+    if (!sessionId) return;
+
+    const { data: payment } = await supabase
+      .from("payments")
+      .select("*")
+      .eq("stripe_session_id", sessionId)
+      .single();
+    if (!payment) return;
+
+    const { data: inquiry } = await supabase
+      .from("inquiries")
+      .select("total_amount")
+      .eq("id", payment.inquiry_id)
+      .single();
+
+    const { data: paidPayments } = await supabase
+      .from("payments")
+      .select("amount")
+      .eq("inquiry_id", payment.inquiry_id)
+      .eq("status", "paid");
+
+    const totalPaid = (paidPayments || []).reduce((sum, p) => sum + Number(p.amount), 0);
+    const total = inquiry?.total_amount ? Number(inquiry.total_amount) : null;
+    const remaining = total !== null ? total - totalPaid : null;
+
+    setPaymentConfirmation({ label: payment.label, amount: Number(payment.amount), totalPaid, total, remaining });
+    window.history.replaceState({}, "", window.location.pathname);
+  })();
+}, []);
+
+
+if (paymentConfirmation) {
+  return (
+    <div style={{ minHeight: "100vh", background: PAPER, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+      <div style={{ background: WHITE, border: `1px solid ${LINE}`, borderRadius: 4, padding: "48px 36px", textAlign: "center", maxWidth: 420, boxShadow: "0 20px 50px -20px rgba(28,20,16,0.15)" }}>
+        <div style={{ width: 76, height: 76, borderRadius: "50%", border: `2px solid ${SAGE}`, margin: "0 auto 18px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <span style={{ fontSize: 30, color: SAGE }}>✓</span>
+        </div>
+        <div className="mono" style={{ fontSize: 11, letterSpacing: "0.16em", color: SAGE, marginBottom: 12 }}>PAYMENT CONFIRMED</div>
+        <h2 className="display" style={{ margin: "0 0 10px", fontSize: 28 }}>Thank you!</h2>
+        <p style={{ fontSize: 15, color: INK, marginBottom: 4 }}>
+          {paymentConfirmation.label} — <strong>${paymentConfirmation.amount.toFixed(2)}</strong>
+        </p>
+        {paymentConfirmation.total !== null && (
+          <div style={{ marginTop: 20, paddingTop: 20, borderTop: `1px solid ${LINE}` }}>
+            <p style={{ fontSize: 13, color: "#8A746B", margin: "4px 0" }}>Total quote: ${paymentConfirmation.total.toFixed(2)}</p>
+            <p style={{ fontSize: 13, color: "#8A746B", margin: "4px 0" }}>Paid so far: ${paymentConfirmation.totalPaid.toFixed(2)}</p>
+            <p style={{ fontSize: 16, fontWeight: 700, color: paymentConfirmation.remaining <= 0 ? SAGE : GOLD_DEEP, margin: "10px 0 0" }}>
+              {paymentConfirmation.remaining <= 0 ? "Paid in full 🤍" : `Remaining balance: $${paymentConfirmation.remaining.toFixed(2)}`}
+            </p>
+          </div>
+        )}
+        <button
+          className="cta-btn"
+          onClick={() => { setPaymentConfirmation(null); go("home"); }}
+          style={{ marginTop: 28, background: INK, color: WHITE, border: "none", borderRadius: 30, padding: "13px 26px", fontSize: 12, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}
+        >
+          Return to site
+        </button>
+      </div>
+    </div>
+  );
+}
 
   async function checkLedgerPassword() {
     setLedgerChecking(true);

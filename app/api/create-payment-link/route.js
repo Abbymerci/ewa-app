@@ -28,7 +28,7 @@ export async function POST(req) {
         },
       ],
       customer_email: customerEmail || undefined,
-      success_url: `https://eventwithabby.com/?payment=success`,
+      success_url: `https://eventwithabby.com/?payment=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `https://eventwithabby.com/?payment=cancelled`,
       metadata: { inquiryId, label },
     });
