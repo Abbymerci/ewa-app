@@ -199,6 +199,7 @@ function rowToInquiry(row) {
     services: row.services || [],
     message: row.message,
     styleLook: row.saved_look ? `${row.saved_look.shapeLabel} · ${row.saved_look.paletteLabel}` : null,
+    totalAmount: row.total_amount,
     styleImageUrl: row.saved_look?.imageUrl || null,
     status: row.status,
     createdIso: row.created_at,
@@ -758,6 +759,7 @@ export default function EwaApp() {
 
   const [inquiries, setInquiries] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [payments, setPayments] = useState([]);
   const [ledgerUnlocked, setLedgerUnlocked] = useState(false);
   const [ledgerPasswordInput, setLedgerPasswordInput] = useState("");
   const [ledgerError, setLedgerError] = useState("");
@@ -865,6 +867,94 @@ export default function EwaApp() {
     setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 30);
   }
 
+function PaymentsPanel({ inquiry, payments, onSend }) {
+  const [label, setLabel] = useState("");
+  const [amount, setAmount] = useState("");
+  const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
+  const list = payments.filter((p) => p.inquiry_id === inquiry.id);
+  const [savingQuote, setSavingQuote] = useState(false);
+  const [quoteSaved, setQuoteSaved] = useState(false);
+
+  async function handleSend() {
+    setError("");
+    if (!label.trim() || !amount || Number(amount) <= 0) {
+      setError("Add a label and a valid amount.");
+      return;
+    }
+    setSending(true);
+    await onSend(inquiry, label.trim(), Number(amount));
+    setSending(false);
+    setLabel("");
+    setAmount("");
+  }
+
+  return (
+    <div style={{ borderTop: `1px solid ${LINE}`, marginTop: 12, paddingTop: 10 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+        <span className="mono" style={{ fontSize: 10, color: "#8A746B" }}>QUOTE TOTAL:</span>
+        <input
+          defaultValue={inquiry.totalAmount || ""}
+          onBlur={async (e) => {
+            const val = Number(e.target.value);
+            if (!val) return;
+            setSavingQuote(true);
+            setQuoteSaved(false);
+            const { error } = await supabase.from("inquiries").update({ total_amount: val }).eq("id", inquiry.id);
+            setSavingQuote(false);
+            if (error) {
+              alert("Could not save quote total: " + error.message);
+              return;
+            }
+            inquiry.totalAmount = val;
+            setQuoteSaved(true);
+            setTimeout(() => setQuoteSaved(false), 2000);
+          }}
+          placeholder="$700"
+          style={{ width: 80, fontSize: 12, border: `1px solid ${LINE}`, borderRadius: 12, padding: "3px 8px" }}
+        />
+        {savingQuote && <span style={{ fontSize: 10, color: "#8A746B" }}>saving…</span>}
+        {quoteSaved && <span style={{ fontSize: 10, color: SAGE }}>✓ saved</span>}
+      </div>
+      <div className="mono" style={{ fontSize: 10, letterSpacing: "0.08em", color: "#8A746B", marginBottom: 7, textTransform: "uppercase" }}>Payments</div>
+      {list.length === 0 ? (
+        <div style={{ fontSize: 12, color: "#B0A090", fontStyle: "italic" }}>No payments yet.</div>
+      ) : (
+        list.map((p) => (
+          <div key={p.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0", borderBottom: `1px solid ${LINE}` }}>
+            <span style={{ fontSize: 13, color: INK }}>{p.label}</span>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: INK }}>${Number(p.amount).toLocaleString()}</span>
+              <span style={{
+                background: p.status === "paid" ? "#EEF0E8" : "#F5EBD8",
+                color: p.status === "paid" ? SAGE : GOLD_DEEP,
+                fontSize: 10, padding: "2px 8px", borderRadius: 10, fontWeight: 700,
+              }}>
+                {p.status.toUpperCase()}
+              </span>
+              {p.checkout_url && (
+                <button
+                  onClick={() => navigator.clipboard.writeText(p.checkout_url)}
+                  style={{ background: "transparent", border: "none", color: GOLD_DEEP, fontSize: 10, textDecoration: "underline", cursor: "pointer" }}
+                >
+                  Copy link
+                </button>
+              )}
+            </div>
+          </div>
+        ))
+      )}
+      <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
+        <input value={label} onChange={(e) => setLabel(e.target.value)} placeholder="Label" style={{ flex: 1, fontSize: 12, border: `1px solid ${LINE}`, borderRadius: 16, padding: "6px 10px", fontFamily: "'Manrope', sans-serif" }} />
+        <input value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="$" type="number" style={{ width: 70, fontSize: 12, border: `1px solid ${LINE}`, borderRadius: 16, padding: "6px 10px", fontFamily: "'Manrope', sans-serif" }} />
+        <button onClick={handleSend} disabled={sending} style={{ background: "transparent", border: `1px solid ${GOLD}`, color: GOLD_DEEP, borderRadius: 16, padding: "6px 14px", fontSize: 11, fontWeight: 700, whiteSpace: "nowrap" }}>
+          {sending ? "…" : "+ Send"}
+        </button>
+      </div>
+      {error && <div style={{ color: BLUSH, fontSize: 12, marginTop: 6 }}>{error}</div>}
+    </div>
+  );
+}
   function BackButton() {
     if (view === "home") return null;
     return (
@@ -884,7 +974,13 @@ export default function EwaApp() {
   function scrollToForm() {
     go("inquire");
   }
-
+useEffect(() => {
+  (async () => {
+    if (!supabase) return;
+    const { data, error } = await supabase.from("payments").select("*").order("created_at", { ascending: true });
+    if (!error && data) setPayments(data);
+  })();
+}, []);
   function handleSaveLook(dataUrl) {
     const shapeLabel = SHAPES.find((s) => s.id === vizShape).label;
     const styleLabel = DECOR_STYLES.find((d) => d.id === vizDecorStyle).label;
@@ -923,6 +1019,40 @@ export default function EwaApp() {
     setSavedLook({ shapeLabel: SHAPES.find((s) => s.id === vizShape).label, paletteLabel: vizPalette.label, dataUrl: previewUrl });
     scrollToForm();
   }
+
+async function sendPaymentLink(inquiry, label, amount) {
+  const alreadyPaid = payments
+    .filter((p) => p.inquiry_id === inquiry.id && p.status === "paid")
+    .reduce((sum, p) => sum + Number(p.amount), 0);
+
+  const res = await fetch("/api/create-payment-link", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      inquiryId: inquiry.id,
+      label,
+      amount,
+      refCode: refCode(inquiry.id),
+      customerEmail: inquiry.email,
+      customerName: inquiry.name,
+      totalAmount: inquiry.totalAmount,
+      alreadyPaid,
+    }),
+  });
+  const data = await res.json();
+  if (data.error) {
+    alert(data.error.message);
+    return;
+  }
+  const { data: row, error } = await supabase
+    .from("payments")
+    .insert({ inquiry_id: inquiry.id, label, amount, status: "sent", stripe_session_id: data.sessionId, checkout_url: data.url })
+    .select()
+    .single();
+  if (!error) {
+    setPayments((prev) => [...prev, row]);
+  }
+}
 
   async function submitInquiry() {
     if (selectedServices.length === 0) return setError("Pick at least one service.");
@@ -972,13 +1102,20 @@ export default function EwaApp() {
     }
   }
 
-  async function removeInquiry(id) {
-    if (!supabase) return;
-    const { error } = await supabase.from("inquiries").delete().eq("id", id);
-    if (!error) {
-      setInquiries((prev) => prev.filter((i) => i.id !== id));
-    }
+async function removeInquiry(id) {
+  if (!supabase) return;
+  const confirmed = window.confirm("Are you sure you want to permanently remove this inquiry and its payment history? This can't be undone.");
+  if (!confirmed) return;
+
+  await supabase.from("payments").delete().eq("inquiry_id", id);
+  const { error } = await supabase.from("inquiries").delete().eq("id", id);
+  if (error) {
+    alert("Could not remove: " + error.message);
+    return;
   }
+  setInquiries((prev) => prev.filter((i) => i.id !== id));
+  setPayments((prev) => prev.filter((p) => p.inquiry_id !== id));
+}
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -1024,7 +1161,7 @@ export default function EwaApp() {
       : /(hall|venue|ballroom|hotel|banquet)/.test(t) ? "banquet"
       : /(evening|night|moody|dark)/.test(t) ? "noir" : "studio";
     return {
-      reply: "Beautiful choice — here's a direction I'd love for this. Tap below to see it in 3D, or send it with your inquiry and Abby will tailor it from there.",
+      reply: "Beautiful choice — here's a direction I'd love for this. Tap below to see it in 3D, or send it with your inquiry and Ẹwà will tailor it from there.",
       suggestion: { shapeId, shapeLabel, colors, venueId, packageName, packageFrom, rationale: "Styled from the details you shared." },
     };
   }
@@ -1887,7 +2024,10 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
                         {inq.styleImageUrl && (
                           <img src={inq.styleImageUrl} alt="Client's AI-generated preview" style={{ width: 160, borderRadius: 6, marginTop: 8, border: `1px solid ${LINE}` }} />
                         )}
+                        
                         {inq.message && <div style={{ fontSize: 13, marginTop: 10, color: INK, lineHeight: 1.5, fontStyle: "italic", whiteSpace: "pre-line" }}>"{inq.message}"</div>}
+                        
+                        <PaymentsPanel inquiry={inq} payments={payments} onSend={sendPaymentLink} />
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-end" }}>
                         <button
@@ -1935,7 +2075,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
               <p style={{ margin: "0 0 6px", fontSize: 14, color: "#8A746B" }}>{confirmed.services.join(", ")}</p>
               <p className="mono" style={{ margin: "0 0 22px", fontSize: 14 }}>{fmtDate(confirmed.eventDate)}</p>
               <p style={{ fontSize: 13, color: "#8A746B", marginBottom: 28, lineHeight: 1.7, maxWidth: 380, marginLeft: "auto", marginRight: "auto" }}>
-                Abby will follow up at {confirmed.email} with availability and a tailored quote for your event.
+                Ẹwà will follow up at {confirmed.email} with availability and a tailored quote for your event.
               </p>
               <button
                 className="cta-btn"
@@ -1951,7 +2091,7 @@ If the client hasn't given enough detail yet (no occasion or vibe at all), set "
               <div className="mono" style={{ color: GOLD_DEEP, fontSize: 11, letterSpacing: "0.18em", marginBottom: 8, textAlign: "center" }}>REQUEST A CONSULTATION</div>
               <h2 className="display" style={{ fontSize: 34, textAlign: "center", marginBottom: 10 }}>Tell us about your event</h2>
               <p style={{ fontSize: 14, color: "#8A746B", marginBottom: 36, textAlign: "center", maxWidth: 420, marginLeft: "auto", marginRight: "auto", lineHeight: 1.6 }}>
-                No booking fee to inquire — Abby will follow up personally with availability and pricing.
+                No booking fee to inquire — Ẹwà will follow up personally with availability and pricing.
               </p>
 
               <div style={{ background: WHITE, border: `1px solid ${LINE}`, borderRadius: 4, padding: "36px 32px", boxShadow: "0 24px 60px -30px rgba(28,20,16,0.18)" }}>
