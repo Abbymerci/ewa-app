@@ -839,13 +839,14 @@ export default function EwaApp() {
       .eq("id", payment.inquiry_id)
       .single();
 
-    const { data: paidPayments } = await supabase
-      .from("payments")
-      .select("amount")
-      .eq("inquiry_id", payment.inquiry_id)
-      .eq("status", "paid");
+      const { data: otherPaidPayments } = await supabase
+    .from("payments")
+    .select("amount")
+    .eq("inquiry_id", payment.inquiry_id)
+    .eq("status", "paid")
+    .neq("stripe_session_id", sessionId);
 
-    const totalPaid = (paidPayments || []).reduce((sum, p) => sum + Number(p.amount), 0);
+    const totalPaid = (otherPaidPayments || []).reduce((sum, p) => sum + Number(p.amount), 0) + Number(payment.amount);
     const total = inquiry?.total_amount ? Number(inquiry.total_amount) : null;
     const remaining = total !== null ? total - totalPaid : null;
 
